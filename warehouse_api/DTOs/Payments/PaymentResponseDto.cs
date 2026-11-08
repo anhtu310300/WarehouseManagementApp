@@ -1,0 +1,22 @@
+﻿namespace warehouse_api.DTOs.Payments
+{
+    public class PaymentResponseDto
+    {
+        public int PaymentId { get; set; }
+
+        public int BookingId { get; set; }
+
+        public DateTime PaymentDate { get; set; }
+
+        public double PaymentAmount { get; set; }
+
+        public string PaymentMode { get; set; } = string.Empty;
+
+        public string PaymentNarration { get; set; }
+            = string.Empty;
+
+        public string Status { get; set; } = string.Empty;
+
+        public int ReceivedId { get; set; }
+    }
+}
