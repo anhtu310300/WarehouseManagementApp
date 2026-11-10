@@ -43,10 +43,8 @@ public class SpacesController : ControllerBase
             new ApiResponse<List<SpaceResponseDto>>
             {
                 Data = spaces,
-                Messages = new List<string>
-                {
-                    "Spaces retrieved successfully."
-                }
+                Message = "Spaces retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -61,10 +59,11 @@ public class SpacesController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Space was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -72,10 +71,8 @@ public class SpacesController : ControllerBase
             new ApiResponse<SpaceResponseDto>
             {
                 Data = space,
-                Messages = new List<string>
-                {
-                    "Space retrieved successfully."
-                }
+                Message = "Space retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -101,10 +98,8 @@ public class SpacesController : ControllerBase
             new ApiResponse<List<SpaceAvailabilityResponseDto>>
             {
                 Data = spaces,
-                Messages = new List<string>
-                {
-                "Space availability retrieved successfully."
-                }
+                Message = "Space availability retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -129,10 +124,8 @@ public class SpacesController : ControllerBase
             new ApiResponse<SpaceResponseDto>
             {
                 Data = space,
-                Messages = new List<string>
-                {
-                    "Space created successfully."
-                }
+                Message = "Space created successfully.",
+                IsSuccess = true
             });
     }
 
@@ -158,10 +151,11 @@ public class SpacesController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Space was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -169,10 +163,8 @@ public class SpacesController : ControllerBase
             new ApiResponse<SpaceResponseDto>
             {
                 Data = space,
-                Messages = new List<string>
-                {
-                    "Space updated successfully."
-                }
+                Message = "Space updated successfully.",
+                IsSuccess = true
             });
     }
 
@@ -188,10 +180,11 @@ public class SpacesController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Space was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -199,10 +192,8 @@ public class SpacesController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = new List<string>
-                {
-                    "Space deactivated successfully."
-                }
+                Message = "Space deactivated successfully.",
+                IsSuccess = true
             });
     }
 
@@ -218,7 +209,8 @@ public class SpacesController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = messages
+                ErrorMessages = messages,
+                IsSuccess = false
             });
     }
 }

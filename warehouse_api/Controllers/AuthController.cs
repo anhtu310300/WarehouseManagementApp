@@ -38,7 +38,8 @@ namespace warehouse_api.Controllers
                 return BadRequest(new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = messages
+                    ErrorMessages = messages,
+                    IsSuccess = false
                 });
             }
 
@@ -50,7 +51,8 @@ namespace warehouse_api.Controllers
                 return Ok(new ApiResponse<LoginResponseDto>
                 {
                     Data = loginReponse,
-                    Messages = new List<string> { "Login successful" }
+                    Message = "Login successful",
+                    IsSuccess = true
                 });
             }
 
@@ -59,10 +61,11 @@ namespace warehouse_api.Controllers
                 return Unauthorized(new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
-                {
-                    exception.Message
-                }
+                    ErrorMessages = new List<string>
+                    {
+                        exception.Message
+                    },
+                    IsSuccess = false
                 });
             }
         }

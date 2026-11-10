@@ -39,10 +39,8 @@ public class WarehousesController : ControllerBase
             new ApiResponse<List<WarehouseResponseDto>>
             {
                 Data = warehouses,
-                Messages = new List<string>
-                {
-                    "Warehouses retrieved successfully."
-                }
+                Message = "Warehouses retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -58,10 +56,11 @@ public class WarehousesController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Warehouse was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -69,10 +68,8 @@ public class WarehousesController : ControllerBase
             new ApiResponse<WarehouseResponseDto>
             {
                 Data = warehouse,
-                Messages = new List<string>
-                {
-                    "Warehouse retrieved successfully."
-                }
+                Message = "Warehouse retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -97,10 +94,8 @@ public class WarehousesController : ControllerBase
             new ApiResponse<WarehouseResponseDto>
             {
                 Data = warehouse,
-                Messages = new List<string>
-                {
-                    "Warehouse created successfully."
-                }
+                Message = "Warehouse created successfully.",
+                IsSuccess = true
             });
     }
 
@@ -126,10 +121,11 @@ public class WarehousesController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Warehouse was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -137,10 +133,8 @@ public class WarehousesController : ControllerBase
             new ApiResponse<WarehouseResponseDto>
             {
                 Data = warehouse,
-                Messages = new List<string>
-                {
-                    "Warehouse updated successfully."
-                }
+                Message = "Warehouse updated successfully.",
+                IsSuccess = true
             });
     }
 
@@ -156,10 +150,11 @@ public class WarehousesController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Warehouse was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -167,10 +162,8 @@ public class WarehousesController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = new List<string>
-                {
-                    "Warehouse deleted successfully."
-                }
+                Message = "Warehouse deleted successfully.",
+                IsSuccess = true
             });
     }
 
@@ -186,7 +179,8 @@ public class WarehousesController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = messages
+                ErrorMessages = messages,
+                IsSuccess = false
             });
     }
 }

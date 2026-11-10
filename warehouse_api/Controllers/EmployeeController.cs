@@ -37,10 +37,8 @@ public class EmployeesController : ControllerBase
         return Ok(new ApiResponse<List<EmployeeResponseDto>>
         {
             Data = employees,
-            Messages = new List<string>
-            {
-                "Employees retrieved successfully."
-            }
+            Message = "Employees retrieved successfully.",
+            IsSuccess = true
         });
     }
 
@@ -54,20 +52,19 @@ public class EmployeesController : ControllerBase
             return NotFound(new ApiResponse<object?>
             {
                 Data = null,
-                Messages = new List<string>
+                ErrorMessages = new List<string>
                 {
                     "Employee was not found."
-                }
+                },
+                IsSuccess = false
             });
         }
 
         return Ok(new ApiResponse<EmployeeResponseDto>
         {
             Data = employee,
-            Messages = new List<string>
-            {
-                "Employee retrieved successfully."
-            }
+            Message = "Employee retrieved successfully.",
+            IsSuccess = true
         });
     }
 
@@ -92,10 +89,8 @@ public class EmployeesController : ControllerBase
             new ApiResponse<EmployeeResponseDto>
             {
                 Data = employee,
-                Messages = new List<string>
-                {
-                    "Employee created successfully."
-                }
+                Message = "Employee created successfully.",
+                IsSuccess = true
             });
     }
 
@@ -120,20 +115,19 @@ public class EmployeesController : ControllerBase
             return NotFound(new ApiResponse<object?>
             {
                 Data = null,
-                Messages = new List<string>
+                ErrorMessages = new List<string>
                 {
                     "Employee was not found."
-                }
+                },
+                IsSuccess = false
             });
         }
 
         return Ok(new ApiResponse<EmployeeResponseDto>
         {
             Data = employee,
-            Messages = new List<string>
-            {
-                "Employee updated successfully."
-            }
+            Message = "Employee updated successfully.",
+            IsSuccess = true
         });
     }
 
@@ -148,20 +142,19 @@ public class EmployeesController : ControllerBase
             return NotFound(new ApiResponse<object?>
             {
                 Data = null,
-                Messages = new List<string>
+                ErrorMessages = new List<string>
                 {
                     "Employee was not found."
-                }
+                },
+                IsSuccess = false
             });
         }
 
         return Ok(new ApiResponse<object?>
         {
             Data = null,
-            Messages = new List<string>
-            {
-                "Employee deactivated successfully."
-            }
+            Message = "Employee deactivated successfully.",
+            IsSuccess = true
         });
     }
 
@@ -177,7 +170,8 @@ public class EmployeesController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = messages
+                ErrorMessages = messages,
+                IsSuccess = false
             });
     }
 }

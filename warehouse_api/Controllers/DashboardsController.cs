@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using warehouse_api.Common.Responses;
 using warehouse_api.DTOs.Dashboards;
 using warehouse_api.Services.Interfaces;
@@ -38,10 +38,11 @@ public class DashboardsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Warehouse was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -49,10 +50,8 @@ public class DashboardsController : ControllerBase
             new ApiResponse<WarehouseDashboardResponseDto>
             {
                 Data = dashboard,
-                Messages = new List<string>
-                {
-                    "Warehouse dashboard retrieved successfully."
-                }
+                Message = "Warehouse dashboard retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -67,10 +66,8 @@ public class DashboardsController : ControllerBase
             new ApiResponse<OwnerDashboardResponseDto>
             {
                 Data = dashboard,
-                Messages = new List<string>
-                {
-                    "Owner dashboard retrieved successfully."
-                }
+                Message = "Owner dashboard retrieved successfully.",
+                IsSuccess = true
             });
     }
 }

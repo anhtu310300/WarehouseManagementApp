@@ -38,10 +38,8 @@ public class PaymentsController : ControllerBase
             new ApiResponse<List<PaymentResponseDto>>
             {
                 Data = payments,
-                Messages = new List<string>
-                {
-                    "Payments retrieved successfully."
-                }
+                Message = "Payments retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -56,10 +54,11 @@ public class PaymentsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Payment was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -67,10 +66,8 @@ public class PaymentsController : ControllerBase
             new ApiResponse<PaymentResponseDto>
             {
                 Data = payment,
-                Messages = new List<string>
-                {
-                    "Payment retrieved successfully."
-                }
+                Message = "Payment retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -94,10 +91,8 @@ public class PaymentsController : ControllerBase
                 new ApiResponse<PaymentResponseDto>
                 {
                     Data = payment,
-                    Messages = new List<string>
-                    {
-                        "Payment created successfully."
-                    }
+                    Message = "Payment created successfully.",
+                    IsSuccess = true
                 });
         }
         catch (ArgumentException exception)
@@ -106,10 +101,11 @@ public class PaymentsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         exception.Message
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
     }
@@ -134,10 +130,11 @@ public class PaymentsController : ControllerBase
                     new ApiResponse<object?>
                     {
                         Data = null,
-                        Messages = new List<string>
+                        ErrorMessages = new List<string>
                         {
                             "Payment was not found."
-                        }
+                        },
+                        IsSuccess = false
                     });
             }
 
@@ -145,10 +142,8 @@ public class PaymentsController : ControllerBase
                 new ApiResponse<PaymentResponseDto>
                 {
                     Data = payment,
-                    Messages = new List<string>
-                    {
-                        "Payment updated successfully."
-                    }
+                    Message = "Payment updated successfully.",
+                    IsSuccess = true
                 });
         }
         catch (ArgumentException exception)
@@ -157,10 +152,11 @@ public class PaymentsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         exception.Message
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
     }
@@ -176,10 +172,11 @@ public class PaymentsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Payment was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -187,10 +184,8 @@ public class PaymentsController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = new List<string>
-                {
-                    "Payment deleted successfully."
-                }
+                Message = "Payment deleted successfully.",
+                IsSuccess = true
             });
     }
 
@@ -202,7 +197,8 @@ public class PaymentsController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = messages
+                ErrorMessages = messages,
+                IsSuccess = false
             });
     }
 }

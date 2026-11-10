@@ -3,6 +3,8 @@
     public class ApiResponse<T>
     {
         public T? Data { get; set; }
-        public List<string> Messages { get; set; } = new();
+        public string Message { get; set; } = string.Empty;
+        public List<string> ErrorMessages { get; set; } = new();
+        public bool IsSuccess { get; set; }
     }
 }

@@ -39,10 +39,8 @@ public class CustomersController : ControllerBase
             new ApiResponse<List<CustomerResponseDto>>
             {
                 Data = customers,
-                Messages = new List<string>
-                {
-                    "Customers retrieved successfully."
-                }
+                Message = "Customers retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -58,10 +56,11 @@ public class CustomersController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Customer was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -69,10 +68,8 @@ public class CustomersController : ControllerBase
             new ApiResponse<CustomerResponseDto>
             {
                 Data = customer,
-                Messages = new List<string>
-                {
-                    "Customer retrieved successfully."
-                }
+                Message = "Customer retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -97,10 +94,8 @@ public class CustomersController : ControllerBase
             new ApiResponse<CustomerResponseDto>
             {
                 Data = customer,
-                Messages = new List<string>
-                {
-                    "Customer created successfully."
-                }
+                Message = "Customer created successfully.",
+                IsSuccess = true
             });
     }
 
@@ -126,10 +121,11 @@ public class CustomersController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Customer was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -137,10 +133,8 @@ public class CustomersController : ControllerBase
             new ApiResponse<CustomerResponseDto>
             {
                 Data = customer,
-                Messages = new List<string>
-                {
-                    "Customer updated successfully."
-                }
+                Message = "Customer updated successfully.",
+                IsSuccess = true
             });
     }
 
@@ -156,10 +150,11 @@ public class CustomersController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Customer was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -167,10 +162,8 @@ public class CustomersController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = new List<string>
-                {
-                    "Customer deleted successfully."
-                }
+                Message = "Customer deleted successfully.",
+                IsSuccess = true
             });
     }
 
@@ -186,7 +179,8 @@ public class CustomersController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = messages
+                ErrorMessages = messages,
+                IsSuccess = false
             });
     }
 }

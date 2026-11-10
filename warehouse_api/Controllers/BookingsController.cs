@@ -43,10 +43,8 @@ public class BookingsController : ControllerBase
             new ApiResponse<List<BookingResponseDto>>
             {
                 Data = bookings,
-                Messages = new List<string>
-                {
-                    "Bookings retrieved successfully."
-                }
+                Message = "Bookings retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -61,10 +59,11 @@ public class BookingsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Booking was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -72,10 +71,8 @@ public class BookingsController : ControllerBase
             new ApiResponse<BookingResponseDto>
             {
                 Data = booking,
-                Messages = new List<string>
-                {
-                    "Booking retrieved successfully."
-                }
+                Message = "Booking retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -98,10 +95,8 @@ public class BookingsController : ControllerBase
             new ApiResponse<List<BookingCalendarResponseDto>>
             {
                 Data = bookings,
-                Messages = new List<string>
-                {
-                    "Booking calendar retrieved successfully."
-                }
+                Message = "Booking calendar retrieved successfully.",
+                IsSuccess = true
             });
     }
 
@@ -126,10 +121,8 @@ public class BookingsController : ControllerBase
             new ApiResponse<BookingResponseDto>
             {
                 Data = booking,
-                Messages = new List<string>
-                {
-                    "Booking created successfully."
-                }
+                Message = "Booking created successfully.",
+                IsSuccess = true
             });
         } 
         catch (ArgumentException exception) 
@@ -138,10 +131,11 @@ public class BookingsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         exception.Message
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -167,10 +161,11 @@ public class BookingsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Booking was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -178,10 +173,8 @@ public class BookingsController : ControllerBase
             new ApiResponse<BookingResponseDto>
             {
                 Data = booking,
-                Messages = new List<string>
-                {
-                    "Booking updated successfully."
-                }
+                Message = "Booking updated successfully.",
+                IsSuccess = true
             });
             
         } 
@@ -191,10 +184,11 @@ public class BookingsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         exception.Message
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -211,10 +205,11 @@ public class BookingsController : ControllerBase
                 new ApiResponse<object?>
                 {
                     Data = null,
-                    Messages = new List<string>
+                    ErrorMessages = new List<string>
                     {
                         "Booking was not found."
-                    }
+                    },
+                    IsSuccess = false
                 });
         }
 
@@ -222,10 +217,8 @@ public class BookingsController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = new List<string>
-                {
-                    "Booking deleted successfully."
-                }
+                Message = "Booking deleted successfully.",
+                IsSuccess = true
             });
     }
 
@@ -240,7 +233,8 @@ public class BookingsController : ControllerBase
             new ApiResponse<object?>
             {
                 Data = null,
-                Messages = messages
+                ErrorMessages = messages,
+                IsSuccess = false
             });
     }
 }
