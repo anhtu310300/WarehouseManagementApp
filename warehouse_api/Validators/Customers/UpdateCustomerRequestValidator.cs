@@ -16,6 +16,8 @@ namespace warehouse_api.Validators.Customers
                     "Customer name must not exceed 50 characters.");
 
             RuleFor(request => request.Address)
+                .NotEmpty()
+                .WithMessage("Address is required.")
                 .MaximumLength(50)
                 .WithMessage(
                     "Address must not exceed 50 characters.");
@@ -28,15 +30,17 @@ namespace warehouse_api.Validators.Customers
                     "Mobile number must not exceed 50 characters.");
 
             RuleFor(request => request.Email)
+                .NotEmpty()
+                .WithMessage("Email is required.")
                 .MaximumLength(50)
                 .WithMessage(
                     "Email must not exceed 50 characters.")
                 .EmailAddress()
-                .WithMessage("Email format is invalid.")
-                .When(request =>
-                    !string.IsNullOrWhiteSpace(request.Email));
+                .WithMessage("Email format is invalid.");
 
             RuleFor(request => request.GstNo)
+                .NotEmpty()
+                .WithMessage("GST number is required.")
                 .MaximumLength(50)
                 .WithMessage(
                     "GST number must not exceed 50 characters.");

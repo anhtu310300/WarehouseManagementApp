@@ -1,0 +1,186 @@
+<section class="customer-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Customer management</p>
+      <h2>Customers</h2>
+      <p class="page-description">
+        View customer details and manage customer records.
+      </p>
+    </div>
+
+    <button class="primary-button" type="button" routerLink="/admin/client-form/0">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      <span>Add customer</span>
+    </button>
+  </header>
+
+  <section class="toolbar" aria-label="Customer list controls">
+    <label class="search-box">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" placeholder="Search name, email, mobile or GST..." />
+    </label>
+
+    <div class="toolbar-actions">
+      <button class="icon-button" type="button" aria-label="Refresh customer list">
+        <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+      </button>
+
+      <div class="view-switcher" aria-label="Choose list view">
+        <button class="view-button" 
+        (click)="isCardView = !isCardView" 
+        [ngClass]="isCardView ? 'active': '' " 
+        type="button" aria-pressed="true">
+          <i class="fa-solid fa-grip" aria-hidden="true"></i>
+          <span>Cards</span>
+        </button>
+        <button class="view-button" 
+        (click)="isCardView = !isCardView" 
+        [ngClass]="!isCardView ? 'active': '' " 
+        type="button" aria-pressed="false">
+          <i class="fa-solid fa-table-list" aria-hidden="true"></i>
+          <span>Table</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <div class="result-summary">
+    <p><strong>1</strong> customer found</p>
+    <span><i class="fa-solid fa-grip" aria-hidden="true"></i> Card view</span>
+  </div>
+@if (isCardView) {
+  <section class="view-panel card-view is-active" aria-label="Customer card view">
+    @for (item of clientList(); track $index) {
+      <article class="customer-card">
+        <div class="card-top">
+          <div class="customer-avatar" aria-hidden="true">RK</div>
+  
+          <div class="customer-heading">
+            <span class="customer-id">Customer {{$index + 1}} </span>
+            <h3>{{item.custName}}</h3>
+            <p>
+              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+              {{item.address}}
+            </p>
+          </div>
+  
+          <button class="more-button" type="button" aria-label="More customer actions">
+            <i class="fa-solid fa-ellipsis-vertical" aria-hidden="true"></i>
+          </button>
+        </div>
+  
+        <div class="customer-details">
+          <div class="detail-row">
+            <span class="detail-icon"><i class="fa-solid fa-phone" aria-hidden="true"></i></span>
+            <div>
+              <small>Mobile</small>
+              <strong>{{item.mobile}}</strong>
+            </div>
+          </div>
+  
+          <div class="detail-row">
+            <span class="detail-icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span>
+            <div>
+              <small>Email</small>
+              <strong>{{item.email}}</strong>
+            </div>
+          </div>
+  
+          <div class="detail-row">
+            <span class="detail-icon"><i class="fa-solid fa-receipt" aria-hidden="true"></i></span>
+            <div>
+              <small>GST number</small>
+              <strong>{{item.gstNo}}</strong>
+            </div>
+          </div>
+        </div>
+  
+        <footer class="card-actions">
+          <button class="text-button" type="button">
+            <i class="fa-regular fa-eye" aria-hidden="true"></i>
+            View
+          </button>
+          <button class="text-button" type="button">
+            <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+            Edit
+          </button>
+          <button class="text-button danger" type="button">
+            <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+            Delete
+          </button>
+        </footer>
+      </article>
+
+    }
+  </section>
+
+} @else {
+  <section class="view-panel table-view is-active" aria-label="Customer table view">
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Contact</th>
+            <th>Address</th>
+            <th>GST number</th>
+            <th class="action-column">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of clientList(); track $index) {
+            <tr>
+              <td>
+                <div class="customer-cell">
+                  <span class="table-avatar">RK</span>
+                  <div>
+                    <strong>{{item.custName}}</strong>
+                    <small>Customer #1</small>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="contact-cell">
+                  <span><i class="fa-solid fa-phone" aria-hidden="true"></i>{{item.mobile}}</span>
+                  <span><i class="fa-solid fa-envelope" aria-hidden="true"></i>{{item.email}}</span>
+                </div>
+              </td>
+              <td>{{item.address}}</td>
+              <td><span class="gst-badge">{{item.gstNo}}</span></td>
+              <td>
+                <div class="row-actions">
+                  <button type="button" aria-label="View Rajesh Kumar">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                  </button>
+                  <button type="button" [attr.aria-label]="'Edit ' + item.custName">
+                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+                  </button>
+                  <button class="delete-action" type="button" aria-label="Delete Rajesh Kumar">
+                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+          }
+        </tbody>
+      </table>
+  
+      <footer class="table-footer">
+        <span>Showing 1 of 1 customer</span>
+        <div class="pagination">
+          <button type="button" disabled aria-label="Previous page">
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <button class="current-page" type="button" aria-current="page">1</button>
+          <button type="button" disabled aria-label="Next page">
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </footer>
+    </div>
+  </section>
+
+}
+
+</section>

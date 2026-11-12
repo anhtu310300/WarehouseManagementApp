@@ -6,12 +6,12 @@
 
         public string? CustName { get; set; }
 
-        public string? Address { get; set; }
+        public string Address { get; set; } = string.Empty;
 
-        public string? Mobile { get; set; }
+        public string Mobile { get; set; } = string.Empty;
 
-        public string? Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
-        public string? GstNo { get; set; }
+        public string GstNo { get; set; } = string.Empty;
     }
 }

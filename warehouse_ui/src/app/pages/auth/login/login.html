@@ -1,0 +1,89 @@
+<main class="login-page container-fluid min-vh-100">
+  <div class="row min-vh-100 align-items-center justify-content-center py-4">
+    <div class="col-12 col-lg-10 col-xl-9">
+      <div class="login-shell row g-0 overflow-hidden">
+        <section class="login-brand col-lg-5 d-none d-lg-flex flex-column justify-content-between p-5">
+          <div>
+            <div class="brand-mark mb-4" aria-hidden="true">
+              <span class="brand-mark__block brand-mark__block--one"></span>
+              <span class="brand-mark__block brand-mark__block--two"></span>
+              <span class="brand-mark__block brand-mark__block--three"></span>
+            </div>
+            <p class="eyebrow mb-3">Warehouse management</p>
+            <h1 class="display-6 fw-semibold mb-3">A better home for every business.</h1>
+            <p class="brand-copy mb-0">
+              Manage storage spaces, client goods, rentals, and payments from one calm,
+              organized workspace.
+            </p>
+          </div>
+
+          <div class="brand-footer">
+            <span class="brand-footer__dot"></span>
+            <span>Secure operations, made simple.</span>
+          </div>
+        </section>
+
+        <section class="login-form-panel col-12 col-lg-7 p-4 p-md-5">
+          <div class="login-form-content mx-auto">
+            <div class="mobile-brand d-lg-none mb-4">
+              <div class="brand-mark mb-3" aria-hidden="true">
+                <span class="brand-mark__block brand-mark__block--one"></span>
+                <span class="brand-mark__block brand-mark__block--two"></span>
+                <span class="brand-mark__block brand-mark__block--three"></span>
+              </div>
+              <p class="eyebrow mb-0">Warehouse management</p>
+            </div>
+
+            <div class="mb-4">
+              <p class="section-label mb-2">Admin portal</p>
+              <h2 class="h3 fw-semibold mb-2">Welcome back</h2>
+              <p class="text-muted mb-0">Sign in to continue managing your warehouse.</p>
+            </div>
+
+            <form>
+              <div class="mb-3">
+                <label class="form-label" for="userName">Username</label>
+                <input
+                  class="form-control form-control-lg"
+                  id="userName"
+                  [(ngModel)]="loginObj.userName"
+                  name="userName"
+                  type="text"
+                  placeholder="Enter your username"
+                  autocomplete="username"
+                />
+              </div>
+
+              <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <label class="form-label mb-0" for="password">Password</label>
+                  <a class="forgot-link" href="#">Forgot password?</a>
+                </div>
+                <input
+                  class="form-control form-control-lg"
+                  id="password"
+                  [(ngModel)]="loginObj.password"
+                  name="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  autocomplete="current-password"
+                />
+              </div>
+
+              <div class="form-check mb-4">
+                <input class="form-check-input" id="remember" name="remember" type="checkbox" />
+                <label class="form-check-label" for="remember">Keep me signed in</label>
+              </div>
+
+              <button class="btn btn-primary btn-lg w-100" type="submit" (click)="onLogin()">Sign in</button>
+            </form>
+
+            <p class="login-help text-center text-muted mb-0">
+              Need help accessing your account? <a href="#">Contact support</a>
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>

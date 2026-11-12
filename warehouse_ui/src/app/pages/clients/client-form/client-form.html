@@ -1,0 +1,177 @@
+<section class="customer-form-page">
+  <header class="page-header">
+    <div class="header-copy">
+      <button class="back-button" type="button" aria-label="Back to customer list">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+      </button>
+
+      <div>
+        <p class="eyebrow">Customer management</p>
+        <h2>Add new customer</h2>
+        <p class="page-description">
+          Create a customer profile with contact and tax information.
+        </p>
+      </div>
+    </div>
+
+    <span class="form-status">
+      <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+      New record
+    </span>
+  </header>
+
+  <div class="form-layout">
+    <main class="form-card">
+      <div class="section-heading">
+        <span class="section-icon">
+          <i class="fa-regular fa-address-card" aria-hidden="true"></i>
+        </span>
+        <div>
+          <h3>Customer information</h3>
+          <p>Fields marked with <span aria-hidden="true">*</span> are required.</p>
+        </div>
+      </div>
+
+      <form class="customer-form" [formGroup]="clientForm">
+        <div class="form-grid">
+          <div class="field-group full-width">
+            <label for="customer-name">
+              Customer name <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-control">
+              <i class="fa-regular fa-user" aria-hidden="true"></i>
+              <input
+                id="customer-name"
+                formControlName = "custName"
+                type="text"
+                placeholder="Enter customer name"
+                autocomplete="name"
+              />
+            </div>
+            <small>Use the customer or registered business name.</small>
+          </div>
+
+          <div class="field-group">
+            <label for="customer-mobile">
+              Mobile number <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-control">
+              <i class="fa-solid fa-phone" aria-hidden="true"></i>
+              <input
+                id="customer-mobile"
+                formControlName = "mobile"
+                type="tel"
+                placeholder="e.g. 9876543210"
+                autocomplete="tel"
+              />
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="customer-email">
+              Email address <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-control">
+              <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+              <input
+                id="customer-email"
+                formControlName = "email"
+                type="email"
+                placeholder="e.g. customer@example.com"
+                autocomplete="email"
+              />
+            </div>
+          </div>
+
+          <div class="field-group full-width">
+            <label for="customer-address">
+              Address <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-control textarea-control">
+              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+              <textarea
+                id="customer-address"
+                formControlName = "address"
+                rows="4"
+                placeholder="Enter the complete customer address"
+                autocomplete="street-address"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="field-group full-width">
+            <label for="customer-gst">GST number</label>
+            <div class="input-control">
+              <i class="fa-solid fa-receipt" aria-hidden="true"></i>
+              <input
+                id="customer-gst"
+                formControlName = "gstNo"
+                type="text"
+                placeholder="e.g. 27ABCDE1234F1Z5"
+                spellcheck="false"
+              />
+            </div>
+            <small>Enter the GST registration number, if applicable.</small>
+          </div>
+        </div>
+
+        <footer class="form-actions">
+          <button class="secondary-button" type="button">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            Cancel
+          </button>
+          <button class="primary-button" type="button" (click)="OnSaveClient()">
+            <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
+            Save customer
+          </button>
+        </footer>
+      </form>
+    </main>
+
+    <aside class="form-sidebar" aria-label="Customer record information">
+      <section class="info-card identity-card">
+        <div class="info-card-header">
+          <span class="info-icon">
+            <i class="fa-solid fa-fingerprint" aria-hidden="true"></i>
+          </span>
+          <div>
+            <small>Customer ID</small>
+            <strong>Generated automatically</strong>
+          </div>
+        </div>
+        <p>
+          A unique customer ID will be assigned after the record is saved.
+        </p>
+      </section>
+
+      <section class="info-card">
+        <h3>
+          <i class="fa-regular fa-lightbulb" aria-hidden="true"></i>
+          Before you save
+        </h3>
+        <ul class="check-list">
+          <li>
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
+            Verify the mobile number and email address.
+          </li>
+          <li>
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
+            Use the complete billing address.
+          </li>
+          <li>
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
+            Confirm the GST number format when supplied.
+          </li>
+        </ul>
+      </section>
+
+      <section class="security-note">
+        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+        <p>
+          <strong>Customer data is protected.</strong>
+          Only authorized warehouse staff should access this information.
+        </p>
+      </section>
+    </aside>
+  </div>
+</section>

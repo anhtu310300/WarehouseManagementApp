@@ -1,0 +1,101 @@
+<div class="app-shell">
+  <aside class="app-sidebar" id="app-sidebar" aria-label="Main navigation">
+    <div class="sidebar-brand">
+      <span class="brand-mark" aria-hidden="true">
+        <i class="fa-solid fa-warehouse"></i>
+      </span>
+      <span class="brand-copy">
+        <strong>Warehouse</strong>
+        <small>Management</small>
+      </span>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Workspace navigation">
+      <span class="nav-section-label">Workspace</span>
+
+      <a class="nav-item active" href="#" aria-current="page" title="Overview">
+        <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+        <span class="nav-label">Overview</span>
+      </a>
+      <a class="nav-item" href="#" title="Warehouses">
+        <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+        <span class="nav-label">Warehouses</span>
+      </a>
+      <a class="nav-item" href="#" title="Spaces">
+        <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+        <span class="nav-label">Spaces</span>
+      </a>
+      <a class="nav-item" href="#" title="Customers" routerLink="/admin/client-list">
+        <i class="fa-solid fa-users" aria-hidden="true"></i>
+        <span class="nav-label">Customers</span>
+      </a>
+      <a class="nav-item" href="#" title="Bookings">
+        <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+        <span class="nav-label">Bookings</span>
+      </a>
+      <a class="nav-item" href="#" title="Payments">
+        <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+        <span class="nav-label">Payments</span>
+      </a>
+      <a class="nav-item" href="#" title="Employees">
+        <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+        <span class="nav-label">Employees</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <span class="user-avatar" aria-hidden="true">
+          <i class="fa-solid fa-user"></i>
+        </span>
+        <span class="user-copy">
+          <strong>{{loggedUser.empName}}</strong>
+          <small>{{loggedUser.role}}</small>
+        </span>
+        <button class="sign-out-button" type="button" title="Sign out" aria-label="Sign out" (click)="onSignOut()">
+          <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <section class="app-workspace">
+    <header class="app-header">
+      <button
+        class="sidebar-toggle"
+        type="button"
+        aria-controls="app-sidebar"
+        aria-expanded="true"
+        title="Toggle sidebar"
+      >
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        <span class="visually-hidden">Toggle sidebar</span>
+      </button>
+
+      <div class="header-copy">
+        <span>Warehouse management</span>
+        <h1>Overview</h1>
+      </div>
+
+      <div class="header-actions">
+        <button class="header-action-button" type="button" title="Notifications" aria-label="Notifications">
+          <i class="fa-regular fa-bell" aria-hidden="true"></i>
+          <span class="notification-dot" aria-hidden="true"></span>
+        </button>
+
+        <div class="header-user" aria-label="Current user">
+          <span class="user-avatar" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
+          <span class="user-copy">
+          <strong>{{loggedUser.empName}}</strong>
+          <small>{{loggedUser.role}}</small>
+          </span>
+          <i class="fa-solid fa-chevron-down header-user-chevron" aria-hidden="true"></i>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+        <router-outlet></router-outlet>
+    </main>
+  </section>
+</div>
