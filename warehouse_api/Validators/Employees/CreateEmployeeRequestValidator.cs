@@ -11,7 +11,10 @@ namespace warehouse_api.Validators.Employees
             RuleFor(request => request.EmpName).NotEmpty().WithMessage("Employee name is required.")
                 .MaximumLength(50).WithMessage("Employee name must not exceed 50 characters.");
 
-            RuleFor(request => request.WarehouseAssignedId).GreaterThan(0).WithMessage("Warehouse ID must be greater than zero.");
+            RuleFor(request => request.WarehouseAssignedId)
+                .GreaterThan(0)
+                .When(request => request.WarehouseAssignedId.HasValue)
+                .WithMessage("Warehouse ID must be greater than zero.");
 
             RuleFor(request => request.MobileNo).NotEmpty().WithMessage("Mobile number is required.")
                 .Matches(@"^\d{10}$").WithMessage("Mobile number must contain exactly 10 digits.");

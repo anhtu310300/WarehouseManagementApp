@@ -15,7 +15,7 @@ namespace warehouse_api.Domain
         public string EmpName { get; set; } = string.Empty;
 
         [Column("warehouseAssignedId")]
-        public int WarehouseAssignedId { get; set; }
+        public int? WarehouseAssignedId { get; set; }
 
         [Column("mobileNo")]
         public string MobileNo { get; set; } = string.Empty;

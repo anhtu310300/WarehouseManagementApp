@@ -148,7 +148,7 @@ namespace warehouse_api.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("userName");
 
-                    b.Property<int>("WarehouseAssignedId")
+                    b.Property<int?>("WarehouseAssignedId")
                         .HasColumnType("int")
                         .HasColumnName("warehouseAssignedId");
 

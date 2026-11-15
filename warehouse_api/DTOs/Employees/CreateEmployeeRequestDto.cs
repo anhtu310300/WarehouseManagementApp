@@ -4,7 +4,7 @@
     {
         public string EmpName { get; set; } = string.Empty;
 
-        public int WarehouseAssignedId { get; set; }
+        public int? WarehouseAssignedId { get; set; }
 
         public string MobileNo { get; set; } = string.Empty;
 
