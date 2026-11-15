@@ -1,0 +1,290 @@
+<section class="warehouse-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Storage network</p>
+      <h2>Warehouses</h2>
+      <p class="page-description">
+        Manage warehouse locations, available space and cold-storage facilities.
+      </p>
+    </div>
+
+    <button class="primary-button" type="button" (click)="onClearForm()">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      <span>Add warehouse</span>
+    </button>
+  </header>
+
+  <section class="summary-grid" aria-label="Warehouse summary">
+    <article class="summary-card">
+      <span class="summary-icon orange">
+        <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+      </span>
+      <div>
+        <small>Total warehouses</small>
+        <strong>{{ warehouseList().length }}</strong>
+        <p>Across {{totalCities()}} cities</p>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <span class="summary-icon charcoal">
+        <i class="fa-solid fa-ruler-combined" aria-hidden="true"></i>
+      </span>
+      <div>
+        <small>Total storage area</small>
+        <strong>{{totalStorageArea()}} <span>sq. ft.</span></strong>
+        <p>Combined available footprint</p>
+      </div>
+    </article>
+
+    <article class="summary-card">
+      <span class="summary-icon green">
+        <i class="fa-solid fa-snowflake" aria-hidden="true"></i>
+      </span>
+      <div>
+        <small>Cold-storage enabled</small>
+        <strong>{{coldStorageEnabledCount()}}</strong>
+        <p>Temperature-controlled locations</p>
+      </div>
+    </article>
+  </section>
+
+  <div class="management-layout">
+    <section class="table-panel" aria-labelledby="warehouse-directory-title">
+      <header class="panel-header table-panel-header">
+        <div>
+          <p class="panel-kicker">Warehouse directory</p>
+          <h3 id="warehouse-directory-title">Location records</h3>
+        </div>
+        <span class="record-count">{{ warehouseList().length }} records</span>
+      </header>
+
+      <section class="toolbar" aria-label="Warehouse list controls">
+        <label class="search-box">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="search" placeholder="Search warehouse, address or city..." />
+        </label>
+
+        <div class="filter-group">
+          <label class="select-control city-filter">
+            <span class="visually-hidden">Filter by city</span>
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            <select>
+              <option>All cities</option>
+              <option>Mumbai</option>
+              <option>Pune</option>
+              <option>Nashik</option>
+            </select>
+          </label>
+
+          <label class="select-control storage-filter">
+            <span class="visually-hidden">Filter by cold-storage availability</span>
+            <i class="fa-solid fa-snowflake" aria-hidden="true"></i>
+            <select>
+              <option>All storage types</option>
+              <option>Cold storage available</option>
+              <option>Standard storage</option>
+            </select>
+          </label>
+
+          <!-- Refresh warehouse list. -->
+          <button class="icon-button" type="button" aria-label="Refresh warehouse list" (click)="getAllWarehouse()">
+            <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </section>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Warehouse</th>
+              <th>Location</th>
+              <th>Total area</th>
+              <th>Storage</th>
+              <th class="action-heading">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of warehouseList(); track $index) {
+            <tr [class.selected-row]="selectedWarehouseId === item.warehouseId">
+              <td>
+                <div class="warehouse-cell">
+                  <span class="table-mark">
+                    <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+                  </span>
+                  <div>
+                    <strong>{{item.title}}</strong>
+                    <small>{{item.address1}}</small>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="location-cell">
+                  <strong>{{item.city}}</strong>
+                  <small>{{item.address2}}</small>
+                </div>
+              </td>
+              <td>
+                <strong class="area-value">{{item.totalArea}}</strong>
+                <small class="area-unit">sq. ft.</small>
+              </td>
+              <td>
+                <span class="storage-badge" [class.cold]="item.isColdStorageAvailable"
+                  [class.standard]="!item.isColdStorageAvailable">
+                  <i class="fa-solid" [class.fa-snowflake]="item.isColdStorageAvailable"
+                    [class.fa-box]="!item.isColdStorageAvailable" aria-hidden="true"></i>
+                  {{item.isColdStorageAvailable ? 'Cold storage' : 'Standard'}}
+                </span>
+              </td>
+              <td>
+                <div class="row-actions">
+                  <!-- View warehouse details. -->
+                  <button type="button" aria-label="View Central Distribution Hub">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                  </button>
+                  <!-- Load this warehouse into the form for editing. -->
+                  <button type="button" aria-label="Edit Central Distribution Hub"
+                    (click)="onEditWarehouse(item.warehouseId)">
+                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+                  </button>
+                  <!-- Delete this warehouse. -->
+                  <button class="danger-action" type="button" aria-label="Delete Central Distribution Hub"
+                    (click)="onDeleteWarehouse(item.warehouseId)">
+                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+
+
+
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="table-footer">
+        <span>Showing {{ warehouseList().length }} warehouses</span>
+        <nav class="pagination" aria-label="Warehouse pagination">
+          <button type="button" disabled aria-label="Previous page">
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <button class="current-page" type="button" aria-current="page">1</button>
+          <button type="button" disabled aria-label="Next page">
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </nav>
+      </footer>
+    </section>
+
+    <aside class="form-panel" aria-labelledby="warehouse-form-title">
+      <header class="panel-header form-panel-header">
+        <div class="form-heading">
+          <span class="form-heading-icon">
+            <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+          </span>
+          <div>
+            <p class="panel-kicker">Warehouse details</p>
+            <h3 id="warehouse-form-title">{{ selectedWarehouseId > 0 ? 'Edit warehouse' : 'Add warehouse' }}</h3>
+          </div>
+        </div>
+        <span class="mode-badge">{{ selectedWarehouseId > 0 ? 'Editing record' : 'New record' }}</span>
+      </header>
+
+      <form class="warehouse-form" [formGroup]="warehouseForm" (ngSubmit)="OnSaveWarehouse()">
+        <div class="field-group full-width">
+          <label for="warehouse-title">
+            Warehouse title <span class="required" aria-hidden="true">*</span>
+          </label>
+          <div class="input-control">
+            <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+            <input id="warehouse-title" formControlName="title" name="title" type="text"
+              placeholder="Enter warehouse title" />
+          </div>
+        </div>
+
+        <div class="field-group full-width">
+          <label for="warehouse-address-1">
+            Address line 1 <span class="required" aria-hidden="true">*</span>
+          </label>
+          <div class="input-control">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            <input id="warehouse-address-1" formControlName="address1" name="address1" type="text"
+              placeholder="Building, plot or unit number" autocomplete="address-line1" />
+          </div>
+        </div>
+
+        <div class="field-group full-width">
+          <label for="warehouse-address-2">
+            Address line 2 <span class="required" aria-hidden="true">*</span>
+          </label>
+          <div class="input-control">
+            <i class="fa-regular fa-map" aria-hidden="true"></i>
+            <input id="warehouse-address-2" formControlName="address2" name="address2" type="text"
+              placeholder="Street, area or landmark" autocomplete="address-line2" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field-group">
+            <label for="warehouse-city">
+              City <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-control">
+              <i class="fa-regular fa-building" aria-hidden="true"></i>
+              <input id="warehouse-city" formControlName="city" name="city" type="text" placeholder="Enter city"
+                autocomplete="address-level2" />
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="warehouse-total-area">
+              Total area <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-control area-control">
+              <i class="fa-solid fa-ruler-combined" aria-hidden="true"></i>
+              <input id="warehouse-total-area" formControlName="totalArea" name="totalArea" type="number" min="1"
+                placeholder="0" />
+              <span>sq. ft.</span>
+            </div>
+          </div>
+        </div>
+
+        <fieldset class="storage-option">
+          <legend>Storage capability</legend>
+          <label class="checkbox-row" for="warehouse-cold-storage">
+            <span class="checkbox-copy">
+              <span class="option-icon">
+                <i class="fa-solid fa-snowflake" aria-hidden="true"></i>
+              </span>
+              <span>
+                <strong>Cold storage available</strong>
+                <small>Enable temperature-controlled storage at this location.</small>
+              </span>
+            </span>
+            <input id="warehouse-cold-storage" formControlName="isColdStorageAvailable" name="isColdStorageAvailable"
+              type="checkbox" />
+          </label>
+        </fieldset>
+
+        <div class="form-note">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          <p>Fields marked with <strong>*</strong> are required before saving.</p>
+        </div>
+
+        <footer class="form-actions">
+          <button class="secondary-button" type="reset" (click)="onClearForm()">
+            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+            Clear
+          </button>
+          <button class="primary-button form-submit" type="button" type="submit">
+            <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
+            {{ selectedWarehouseId > 0 ? 'Update warehouse' : 'Save warehouse' }}
+          </button>
+        </footer>
+      </form>
+    </aside>
+  </div>
+</section>

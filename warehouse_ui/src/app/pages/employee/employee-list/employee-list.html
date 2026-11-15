@@ -1,1 +1,125 @@
-<p>employee-list works!</p>
+<section class="employee-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Team directory</p>
+      <h2>Employees</h2>
+      <p class="page-description">Manage staff profiles, warehouse assignments and account access.</p>
+    </div>
+
+    <button class="primary-button" type="button" routerLink="/admin/employee-form/0">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      <span>Add employee</span>
+    </button>
+  </header>
+
+  <section class="employee-toolbar" aria-label="Employee list controls">
+    <label class="search-control">
+      <span class="visually-hidden">Search employees</span>
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" placeholder="Search by name, username or mobile number" />
+    </label>
+
+    <label class="filter-control warehouse-filter">
+      <span class="visually-hidden">Filter employees by warehouse</span>
+      <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+      <select>
+        <option>All warehouses</option>
+        <option>Warehouse #1</option>
+      </select>
+    </label>
+
+    <label class="filter-control">
+      <span class="visually-hidden">Filter by role</span>
+      <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
+      <select>
+        <option>All roles</option>
+        <option>Admin</option>
+        <option>Manager</option>
+        <option>Employee</option>
+      </select>
+    </label>
+
+    <label class="filter-control">
+      <span class="visually-hidden">Filter by status</span>
+      <i class="fa-regular fa-circle-check" aria-hidden="true"></i>
+      <select>
+        <option>All statuses</option>
+        <option>Active</option>
+        <option>Inactive</option>
+      </select>
+    </label>
+
+    <span class="result-count"><strong>1</strong> employee</span>
+  </section>
+
+  <section class="employee-grid" aria-label="Employee cards">
+    @for (item of employeeList(); track $index) {
+    <article class="employee-card">
+      <div class="card-header">
+        <span class="employee-avatar" aria-hidden="true">AT</span>
+
+        <div class="employee-identity">
+          <div class="employee-name-row">
+            <h3>{{item.empName}}</h3>
+            <span class="employee-id">#2</span>
+          </div>
+          <p>{{item.userName}}</p>
+        </div>
+
+        <span class="status-badge">
+          <span class="status-dot" aria-hidden="true"></span>
+          {{item.isActive}}
+        </span>
+      </div>
+
+      <div class="employee-details">
+        <div class="detail-item">
+          <span class="detail-icon">
+            <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
+          </span>
+          <div>
+            <small>Role</small>
+            <strong>{{item.role}}</strong>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-icon">
+            <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+          </span>
+          <div>
+            <small>Warehouse</small>
+            <strong>{{item.warehouseAssignedId}}</strong>
+          </div>
+        </div>
+
+        <div class="detail-item detail-item-wide">
+          <span class="detail-icon">
+            <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          </span>
+          <div>
+            <small>Mobile number</small>
+            <strong>{{item.mobileNo}}</strong>
+          </div>
+        </div>
+      </div>
+
+      <footer class="card-actions">
+        <button class="secondary-action" type="button">
+          <i class="fa-regular fa-eye" aria-hidden="true"></i>
+          View
+        </button>
+        <button class="secondary-action" type="button"
+        [routerLink]="['/admin/employee-form/', item.empId]">
+          <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+          Edit
+        </button>
+        <button class="danger-action" type="button" (click)="onDeleteClient(item.empId)">
+          <i class="fa-solid fa-user-slash" aria-hidden="true"></i>
+          Deactivate
+        </button>
+      </footer>
+    </article>
+}
+  </section>
+</section>
