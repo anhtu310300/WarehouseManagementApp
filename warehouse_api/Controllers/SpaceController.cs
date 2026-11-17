@@ -35,9 +35,9 @@ public class SpacesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] int? warehouseId = null)
     {
-        var spaces = await _spaceService.GetAllAsync();
+        var spaces = await _spaceService.GetAllAsync(warehouseId);
 
         return Ok(
             new ApiResponse<List<SpaceResponseDto>>

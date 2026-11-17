@@ -25,9 +25,9 @@ namespace warehouse_api.Services
             _mapper = mapper;
         }
 
-        public async Task<List<SpaceResponseDto>> GetAllAsync()
+        public async Task<List<SpaceResponseDto>> GetAllAsync(int? warehouseId = null)
         {
-            var spaces = await _spaceRepository.GetAllAsync();
+            var spaces = await _spaceRepository.GetAllAsync(warehouseId);
             return _mapper.Map<List<SpaceResponseDto>>(spaces);
         }
 

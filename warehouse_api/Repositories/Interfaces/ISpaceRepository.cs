@@ -4,7 +4,7 @@ namespace warehouse_api.Repositories.Interfaces
 {
     public interface ISpaceRepository
     {
-        Task<List<Space>> GetAllAsync();
+        Task<List<Space>> GetAllAsync(int? warehouseId = null);
 
         Task<Space?> GetByIdAsync(int spaceId);
 

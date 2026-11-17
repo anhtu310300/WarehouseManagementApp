@@ -4,7 +4,7 @@ namespace warehouse_api.Services.Interfaces
 {
     public interface ISpaceService
     {
-        Task<List<SpaceResponseDto>> GetAllAsync();
+        Task<List<SpaceResponseDto>> GetAllAsync(int? warehouseId = null);
 
         Task<SpaceResponseDto?> GetByIdAsync(int spaceId);
 

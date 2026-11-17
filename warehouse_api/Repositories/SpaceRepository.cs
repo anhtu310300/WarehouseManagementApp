@@ -13,9 +13,18 @@ namespace warehouse_api.Repositories
             _context = context;
         }
 
-        public async Task<List<Space>> GetAllAsync()
-        { 
-            return await _context.Spaces.OrderBy(space => space.SpaceId).ToListAsync();
+        public async Task<List<Space>> GetAllAsync(int? warehouseId = null)
+        {
+            var query = _context.Spaces.AsQueryable();
+
+            if (warehouseId.HasValue)
+            {
+                query = query.Where(space => space.WarehouseId == warehouseId.Value);
+            }
+
+            return await query
+                .OrderBy(space => space.SpaceId)
+                .ToListAsync();
         }
 
         public async Task<Space?> GetByIdAsync(int spaceId) 
