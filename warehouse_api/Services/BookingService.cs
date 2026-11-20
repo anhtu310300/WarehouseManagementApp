@@ -118,22 +118,22 @@ namespace warehouse_api.Services
                 bookingId);
         }
 
-        private async Task ValidateAvailabilityAsync 
-            (
-            int warehouseId,
-            int spaceId,
-            DateTime fromDate,
-            DateTime tillDate,
-            int sqftAreaNeeded,
-            int? excludedBookingId = null
-            )
+        private async Task ValidateAvailabilityAsync(
+    int warehouseId,
+    int spaceId,
+    DateTime fromDate,
+    DateTime tillDate,
+    int sqftAreaNeeded,
+    int? excludedBookingId = null)
         {
-            var space = await _spaceRepository.GetByIdAsync(spaceId); // Domain of spaces will be used to check, not dto
+            // 1. check spaces
+            var space = await _spaceRepository.GetByIdAsync(spaceId);
 
             if (space is null)
             {
-                throw new ArgumentException("Space is not found");
+                throw new ArgumentException("Space is not found.");
             }
+
             if (space.WarehouseId != warehouseId)
             {
                 throw new ArgumentException(
@@ -146,15 +146,95 @@ namespace warehouse_api.Services
                     "The selected space is inactive.");
             }
 
-            var overlappingBookings = await _bookingRepository.GetOverlappingBookingsAsync(warehouseId, fromDate, tillDate);
-            var bookedArea = overlappingBookings.Where(
-                booking => booking.SpaceId == spaceId &&
-                    (!excludedBookingId.HasValue ||
-                     booking.BookingId !=
-                     excludedBookingId.Value)).Sum(booking => booking.SqftAreaNeeded);
+            // bookings are made for full days, so we only care about the date part of the DateTime.
+            var from = fromDate.Date;
+            var till = tillDate.Date;
 
-            var availableArea = Math.Max(0, space.AreaSqft - bookedArea);
+            if (till < from)
+            {
+                throw new ArgumentException(
+                    "Booking end date must be on or after the start date.");
+            }
 
+            if (sqftAreaNeeded <= 0)
+            {
+                throw new ArgumentException(
+                    "Required area must be greater than zero.");
+            }
+
+            // 2. Get the bookings that overlap with the requested booking date range for the same space.
+            var overlappingBookings =
+                await _bookingRepository.GetOverlappingBookingsAsync(
+                    warehouseId,
+                    from,
+                    till);
+
+            // same spaces only, and exclude the booking being updated if applicable
+            var spaceBookings = overlappingBookings.Where(booking =>
+                booking.SpaceId == spaceId &&
+                (!excludedBookingId.HasValue ||
+                 booking.BookingId != excludedBookingId.Value));
+
+            // 3. Note the date range that square feet taken got changed, and how much square feet got taken on each date in the range.
+            var fromDay = DateOnly.FromDateTime(from).DayNumber;
+            var tillDay = DateOnly.FromDateTime(till).DayNumber;
+
+            var areaChanges = new SortedDictionary<int, long>();
+
+            foreach (var booking in spaceBookings)
+            {
+                var bookingFromDay =
+                    DateOnly.FromDateTime(booking.BookingFromDate).DayNumber;
+
+                var bookingTillDay =
+                    DateOnly.FromDateTime(booking.BookingTillDate).DayNumber;
+
+                // only take part in the date range client wants to book, if the booking is outside the range, it does not affect the availability.
+                var startDay = Math.Max(fromDay, bookingFromDay);
+                var endDay = Math.Min(tillDay, bookingTillDay);
+
+                if (startDay > endDay)
+                {
+                    continue;
+                }
+
+                // Start date: increase the booked area by the sqftAreaNeeded of the booking.
+                areaChanges.TryGetValue(startDay, out var startChange);
+
+                areaChanges[startDay] =
+                    startChange + booking.SqftAreaNeeded;
+
+                // End date: decrease the booked area by the sqftAreaNeeded of the booking.
+                // Because the space is released only after the end date.
+                // Therefore, the area is reduced from the next day.
+                var releaseDay = endDay + 1;
+
+                areaChanges.TryGetValue(releaseDay, out var releaseChange);
+
+                areaChanges[releaseDay] =
+                    releaseChange - booking.SqftAreaNeeded;
+            }
+
+            // 4. find the peak booked area during the requested booking date range
+            // by iterating through the areaChanges dictionary and keeping track of the current booked area and the peak booked area.
+            long currentBookedArea = 0;
+            long peakBookedArea = 0;
+
+            foreach (var change in areaChanges)
+            {
+                currentBookedArea += change.Value;
+
+                peakBookedArea = Math.Max(
+                    peakBookedArea,
+                    currentBookedArea);
+            }
+
+            // 5. avaialable area during the requested booking date range
+            var availableArea = Math.Max(
+                0L,
+                space.AreaSqft - peakBookedArea);
+
+            // 6. only take request if the requested sqftAreaNeeded is less than or equal to the available area during the requested booking date range.
             if (sqftAreaNeeded > availableArea)
             {
                 throw new ArgumentException(

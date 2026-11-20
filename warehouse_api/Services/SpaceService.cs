@@ -45,31 +45,98 @@ namespace warehouse_api.Services
             return _mapper.Map<SpaceResponseDto>(space);
         }
 
-        // If no Booking -> BookedArea = 0, AvailableArea = AreaSqft, IsAvailable = true
-        // AvailableArea must not be negative, if BookedArea > AreaSqft, AvailableArea = 0, IsAvailable = false
-        // availableArea > 0 => IsAvailable = true, availableArea <= 0 => IsAvailable = false
-
-        public async Task<List<SpaceAvailabilityResponseDto>> GetAvailabilityAsync(int warehouseId, DateTime fromDate, DateTime tillDate)
+        public async Task<List<SpaceAvailabilityResponseDto>>
+    GetAvailabilityAsync(
+        int warehouseId,
+        DateTime fromDate,
+        DateTime tillDate)
         {
-            var spaces = await _spaceRepository.GetActiveByWarehouseIdAsync(warehouseId);
-            var bookings = await _bookingRepository.GetOverlappingBookingsAsync(warehouseId, fromDate, tillDate);
-            var bookedAreaBySpace = bookings.Where(booking => booking.SpaceId.HasValue).GroupBy(
-                booking => booking.SpaceId.GetValueOrDefault()).ToDictionary(
-                    group => group.Key,
-                    group => group.Sum(booking => booking.SqftAreaNeeded));
-            // Remove SpaceId that is null, then gather booking based on SpaceId, then sum the SqftAreaNeeded for each group,
-            // and store in a dictionary with SpaceId as key and total booked area as value.
+            var from = fromDate.Date;
+            var till = tillDate.Date;
+
+            // Controller now validates that from <= till, so we don't need to check it here.
+
+            // 1. get all active spaces in the warehouse
+            var spaces =
+                await _spaceRepository.GetActiveByWarehouseIdAsync(
+                    warehouseId);
+
+            // 2. get all bookings that overlap with the requested date range.
+            var bookings =
+                await _bookingRepository.GetOverlappingBookingsAsync(
+                    warehouseId,
+                    from,
+                    till);
+
+            // Take the bookings that have a space assigned, and group them by spaceId.
+            var bookingsBySpace = bookings
+                .Where(booking => booking.SpaceId.HasValue)
+                .ToLookup(booking => booking.SpaceId.GetValueOrDefault());
+
+            var fromDay = DateOnly.FromDateTime(from).DayNumber;
+            var tillDay = DateOnly.FromDateTime(till).DayNumber;
 
             var result = new List<SpaceAvailabilityResponseDto>();
 
-            foreach ( var space in spaces)
+            foreach (var space in spaces)
             {
-                // Calculate the available area for each active space.
-                // If the space has no overlapping bookings, bookedArea defaults to 0.
-                // Available area cannot be negative.
-                // A space is available when it has remaining area.
-                bookedAreaBySpace.TryGetValue(space.SpaceId, out var bookedArea);
-                var availableArea = Math.Max(0, space.AreaSqft - bookedArea);
+                // 3. note the milestones of the sqft area taken for the space, and how much sqft area is taken on each date in the requested date range.
+                var areaChanges = new SortedDictionary<int, long>();
+
+                foreach (var booking in bookingsBySpace[space.SpaceId])
+                {
+                    var bookingFromDay =
+                        DateOnly.FromDateTime(
+                            booking.BookingFromDate).DayNumber;
+
+                    var bookingTillDay =
+                        DateOnly.FromDateTime(
+                            booking.BookingTillDate).DayNumber;
+
+                    var startDay = Math.Max(fromDay, bookingFromDay);
+                    var endDay = Math.Min(tillDay, bookingTillDay);
+
+                    if (startDay > endDay)
+                    {
+                        continue;
+                    }
+
+                    // Start date: increase the booked area by the sqftAreaNeeded of the booking.
+                    areaChanges.TryGetValue(
+                        startDay,
+                        out var startChange);
+
+                    areaChanges[startDay] =
+                        startChange + booking.SqftAreaNeeded;
+
+                    // End date: decrease the booked area by the sqftAreaNeeded of the booking.
+                    var releaseDay = endDay + 1;
+
+                    areaChanges.TryGetValue(
+                        releaseDay,
+                        out var releaseChange);
+
+                    areaChanges[releaseDay] =
+                        releaseChange - booking.SqftAreaNeeded;
+                }
+
+                // 4. Find the peak booked area for the space.
+                long currentBookedArea = 0;
+                long peakBookedArea = 0;
+
+                foreach (var change in areaChanges)
+                {
+                    currentBookedArea += change.Value;
+
+                    peakBookedArea = Math.Max(
+                        peakBookedArea,
+                        currentBookedArea);
+                }
+
+                // 5. Find the available area for the space throughout the requested booking period 
+                var availableArea = Math.Max(
+                    0L,
+                    space.AreaSqft - peakBookedArea);
 
                 result.Add(new SpaceAvailabilityResponseDto
                 {
@@ -77,15 +144,18 @@ namespace warehouse_api.Services
                     WarehouseId = space.WarehouseId,
                     SpaceName = space.SpaceName,
                     TotalAreaSqft = space.AreaSqft,
-                    BookedAreaSqft = bookedArea,
-                    AvailableAreaSqft = availableArea,
+
+                    BookedAreaSqft = checked((int)peakBookedArea),
+                    AvailableAreaSqft = checked((int)availableArea),
+
                     IsAvailable = availableArea > 0
                 });
             }
+
             return result;
         }
 
-        
+
 
         public async Task<SpaceResponseDto> CreateAsync(
             CreateSpaceRequestDto request)
