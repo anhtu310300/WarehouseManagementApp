@@ -1,0 +1,282 @@
+<section class="booking-form-page">
+    <header class="page-header">
+        <div class="header-copy">
+            <button class="back-button" type="button" aria-label="Back to booking list" routerLink="/admin/bookings">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            </button>
+
+            <div>
+                <p class="eyebrow">Booking management</p>
+                <h2>
+                    {{ bookingId > 0 ? 'Edit Booking' : 'Add new Booking' }}
+                </h2>
+                <p class="page-description">
+                    {{
+                    bookingId > 0
+                    ? 'Update booking information and rental details.'
+                    : 'Create a new booking and assign a warehouse space.'
+                    }}
+                </p>
+            </div>
+        </div>
+
+        <span class="form-status">
+            <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
+            {{ bookingId > 0 ? 'Edit Booking' : 'New Booking' }}
+        </span>
+    </header>
+
+    <div class="form-layout">
+        <main class="form-card">
+            <div class="section-heading">
+                <span class="section-icon">
+                    <i class="fa-regular fa-calendar-plus" aria-hidden="true"></i>
+                </span>
+
+                <div>
+                    <h3>Booking information</h3>
+                    <p>
+                        Fields marked with
+                        <span aria-hidden="true">*</span>
+                        are required.
+                    </p>
+                </div>
+            </div>
+
+            <form class="booking-form" [formGroup]="bookingForm">
+                <div class="form-grid">
+                    <div class="field-group full-width">
+                        <label for="booking-customer">
+                            Customer
+                            <span class="required" aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="input-control select-control">
+                            <i class="fa-regular fa-user" aria-hidden="true"></i>
+
+                            <select id="booking-customer" name="customerId" formControlName="customerId">
+                                <option [ngValue]="0" disabled>Select a customer</option>
+
+                                @for (
+                                customer of (customerList$ | async)?.data ?? [];
+                                track customer.customerId
+                                ) {
+                                <option [ngValue]="customer.customerId">
+                                    {{
+                                    customer.custName ||
+                                    'Customer #' + customer.customerId
+                                    }}
+                                </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="booking-warehouse">
+                            Warehouse
+                            <span class="required" aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="input-control select-control">
+                            <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
+
+                            <select id="booking-warehouse" name="warehouseId" formControlName="warehouseId"
+                                (change)="getAllSpace(true)">
+                                <option [ngValue]="0" disabled>Select a warehouse</option>
+
+                                @for (
+                                warehouse of (warehouseList$ | async)?.data ?? [];
+                                track warehouse.warehouseId
+                                ) {
+                                <option [ngValue]="warehouse.warehouseId">
+                                    {{ warehouse.title }}
+                                </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="booking-space">
+                            Space
+                            <span class="required" aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="input-control select-control">
+                            <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+
+                            <select id="booking-space" name="spaceId" formControlName="spaceId">
+                                <option [ngValue]="0" disabled>Select a space</option>
+
+                                @for (
+                                space of (spaceList$ | async) ?? [];
+                                track space.spaceId
+                                ) {
+                                <option [ngValue]="space.spaceId">
+                                    {{ space.spaceName }} —
+                                    {{ space.availableAreaSqft }} /
+                                    {{ space.totalAreaSqft }} sq. ft. available
+                                </option>
+                                }
+                            </select>
+                        </div>
+
+                        <small>Choose a warehouse first to load its spaces.</small>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="booking-from-date">
+                            From date
+                            <span class="required" aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="input-control">
+                            <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+
+                            <input id="booking-from-date" name="bookingFromDate" formControlName="bookingFromDate"
+                                type="date" />
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="booking-till-date">
+                            Till date
+                            <span class="required" aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="input-control">
+                            <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+
+                            <input id="booking-till-date" name="bookingTillDate" formControlName="bookingTillDate"
+                                type="date" [min]="bookingForm.get('bookingFromDate')?.value" />
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="booking-area">
+                            Required area
+                            <span class="required" aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="input-control">
+                            <i class="fa-solid fa-ruler-combined" aria-hidden="true"></i>
+
+                            <input id="booking-area" name="sqftAreaNeeded" formControlName="sqftAreaNeeded"
+                                type="number" min="1" step="1" placeholder="Enter required area" />
+                        </div>
+
+                        <small>Enter the required area in square feet.</small>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="booking-total-amount">
+                            Total amount
+                            <span class="required" aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="input-control">
+                            <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
+
+                            <input id="booking-total-amount" name="totalAmount" formControlName="totalAmount"
+                                type="number" min="0.01" step="0.01" placeholder="Enter total amount" />
+                        </div>
+                    </div>
+
+                    <div class="field-group full-width">
+                        <label for="booking-employee">
+                            Booked by
+                            <span class="required" aria-hidden="true">*</span>
+                        </label>
+
+                        <div class="input-control select-control">
+                            <i class="fa-solid fa-user-tie" aria-hidden="true"></i>
+
+                            <select id="booking-employee" name="bookingDoneBy" formControlName="bookingDoneBy">
+                                <option [ngValue]="0" disabled>Select an employee</option>
+
+                                @for (
+                                employee of (employeeList$ | async)?.data ?? [];
+                                track employee.empId
+                                ) {
+                                <option [ngValue]="employee.empId">
+                                    {{ employee.empName }} — {{ employee.userName }}
+                                </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="form-actions">
+                    <button class="secondary-button" type="button" routerLink="/admin/bookings">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        Cancel
+                    </button>
+
+                    <button class="primary-button" type="submit" (click)="OnSaveBooking()">
+                        <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
+                        {{ bookingId > 0 ? 'Update Booking' : 'Save Booking' }}
+                    </button>
+                </footer>
+            </form>
+        </main>
+
+        <aside class="form-sidebar" aria-label="Booking information">
+            <section class="info-card booking-card">
+                <div class="info-card-header">
+                    <span class="info-icon">
+                        <i class="fa-solid fa-hashtag" aria-hidden="true"></i>
+                    </span>
+
+                    <div>
+                        <small>Booking ID</small>
+                        <strong>
+                            {{ bookingId > 0 ? bookingId : 'Generated automatically' }}
+                        </strong>
+                    </div>
+                </div>
+
+                <p>
+                    {{
+                    bookingId > 0
+                    ? 'This booking ID remains unchanged when the record is updated.'
+                    : 'A unique booking ID will be assigned after the record is saved.'
+                    }}
+                </p>
+            </section>
+
+            <section class="info-card">
+                <h3>
+                    <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+                    Booking details
+                </h3>
+
+                <ul class="check-list">
+                    <li>
+                        <i class="fa-solid fa-check" aria-hidden="true"></i>
+                        Select the customer and warehouse space.
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-check" aria-hidden="true"></i>
+                        Confirm the rental dates and required area.
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-check" aria-hidden="true"></i>
+                        Review the total amount before saving.
+                    </li>
+                </ul>
+            </section>
+
+            <section class="availability-note">
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+
+                <p>
+                    <strong>Space availability</strong>
+                    The selected space must have enough available area for the
+                    requested rental period.
+                </p>
+            </section>
+        </aside>
+    </div>
+</section>

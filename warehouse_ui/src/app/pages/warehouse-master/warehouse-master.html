@@ -106,7 +106,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (item of warehouseList(); track $index) {
+            @for (item of warehouseList(); track item.warehouseId) {
             <tr [class.selected-row]="selectedWarehouseId === item.warehouseId">
               <td>
                 <div class="warehouse-cell">
@@ -139,27 +139,27 @@
               </td>
               <td>
                 <div class="row-actions">
+                  <button class="spaces-action" type="button" [attr.aria-label]="'View spaces in ' + item.title"
+                    title="View spaces" (click)="openSpaceModal(item)">
+                    <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+                  </button>
                   <!-- View warehouse details. -->
-                  <button type="button" aria-label="View Central Distribution Hub">
+                  <button type="button" [attr.aria-label]="'View ' + item.title">
                     <i class="fa-regular fa-eye" aria-hidden="true"></i>
                   </button>
                   <!-- Load this warehouse into the form for editing. -->
-                  <button type="button" aria-label="Edit Central Distribution Hub"
+                  <button type="button" [attr.aria-label]="'Edit ' + item.title"
                     (click)="onEditWarehouse(item.warehouseId)">
                     <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
                   </button>
                   <!-- Delete this warehouse. -->
-                  <button class="danger-action" type="button" aria-label="Delete Central Distribution Hub"
+                  <button class="danger-action" type="button" [attr.aria-label]="'Delete ' + item.title"
                     (click)="onDeleteWarehouse(item.warehouseId)">
                     <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
                   </button>
                 </div>
               </td>
             </tr>
-
-
-
-
             }
           </tbody>
         </table>
@@ -288,3 +288,5 @@
     </aside>
   </div>
 </section>
+
+<app-space-modal #spaceModal />

@@ -506,6 +506,18 @@ tbody tr:last-child td {
   border-color: #fecaca;
 }
 
+.row-actions .spaces-action {
+  color: #2563eb;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.row-actions .spaces-action:hover {
+  color: #1d4ed8;
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
 .table-footer {
   justify-content: space-between;
   min-height: 54px;
@@ -804,4 +816,5 @@ tbody tr:last-child td {
   .form-submit {
     width: 100%;
   }
+
 }

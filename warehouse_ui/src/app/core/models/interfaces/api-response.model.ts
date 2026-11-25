@@ -1,4 +1,4 @@
-export interface API_Response<T = any> {
+export interface IApiResponse<T = unknown> {
   data: T | null;
   message: string;
   errorMessages: string[];

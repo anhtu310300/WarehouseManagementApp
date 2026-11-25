@@ -1,9 +1,6 @@
-export class UserLoginModel {
-    userName: string;
-    password: string;
+import { ILoginRequest } from '../interfaces/auth.model';
 
-    constructor() {
-        this.userName = '';
-        this.password = '';
-    }
+export class UserLoginModel implements ILoginRequest {
+  userName = '';
+  password = '';
 }

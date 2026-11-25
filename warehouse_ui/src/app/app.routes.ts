@@ -7,6 +7,8 @@ import { authGuard } from './core/guards/auth-guard';
 import { WarehouseMaster } from './pages/warehouse-master/warehouse-master';
 import { EmployeeList } from './pages/employee/employee-list/employee-list';
 import { NewEmployee } from './pages/employee/new-employee/new-employee';
+import { BookingList } from './pages/booking/booking-list/booking-list';
+import { BookingForm } from './pages/booking/booking-form/booking-form';
 
 export const routes: Routes = [
   {
@@ -42,7 +44,15 @@ export const routes: Routes = [
       {
         path: 'employee-form/:empid',
         component: NewEmployee,
-      }
+      },
+      {
+        path: 'bookings',
+        component: BookingList,
+      },
+      {
+        path: 'booking-form/:bookingid',
+        component: BookingForm,
+      },
     ],
   },
 ];

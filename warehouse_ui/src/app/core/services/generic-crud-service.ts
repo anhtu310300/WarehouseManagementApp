@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { API_Response } from '../models/interfaces/common.model';
+import { IApiResponse } from '../models/interfaces/api-response.model';
 
 export abstract class GenericCrudService<T> {
   protected readonly http = inject(HttpClient);
@@ -12,23 +12,23 @@ export abstract class GenericCrudService<T> {
     this.resourceUrl = `${environment.API_URL}/${resource}`;
   }
 
-  getAll(): Observable<API_Response<T[]>> {
-    return this.http.get<API_Response<T[]>>(this.resourceUrl);
+  getAll(): Observable<IApiResponse<T[]>> {
+    return this.http.get<IApiResponse<T[]>>(this.resourceUrl);
   }
 
-  getById(id: number): Observable<API_Response<T>> {
-    return this.http.get<API_Response<T>>(`${this.resourceUrl}/${id}`);
+  getById(id: number): Observable<IApiResponse<T>> {
+    return this.http.get<IApiResponse<T>>(`${this.resourceUrl}/${id}`);
   }
 
-  create(payload: Partial<T>): Observable<API_Response<T>> {
-    return this.http.post<API_Response<T>>(this.resourceUrl, payload);
+  create(payload: Partial<T>): Observable<IApiResponse<T>> {
+    return this.http.post<IApiResponse<T>>(this.resourceUrl, payload);
   }
 
-  update(id: number, payload: Partial<T>): Observable<API_Response<T>> {
-    return this.http.put<API_Response<T>>(`${this.resourceUrl}/${id}`, payload);
+  update(id: number, payload: Partial<T>): Observable<IApiResponse<T>> {
+    return this.http.put<IApiResponse<T>>(`${this.resourceUrl}/${id}`, payload);
   }
 
-  delete(id: number): Observable<API_Response<null>> {
-    return this.http.delete<API_Response<null>>(`${this.resourceUrl}/${id}`);
+  delete(id: number): Observable<IApiResponse<null>> {
+    return this.http.delete<IApiResponse<null>>(`${this.resourceUrl}/${id}`);
   }
 }

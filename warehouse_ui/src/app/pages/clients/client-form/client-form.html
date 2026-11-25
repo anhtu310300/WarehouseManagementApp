@@ -1,22 +1,24 @@
 <section class="customer-form-page">
   <header class="page-header">
     <div class="header-copy">
-      <button class="back-button" type="button" aria-label="Back to customer list">
+      <!-- Return to the customer list without saving. -->
+      <button class="back-button" type="button" aria-label="Back to customer list"
+      routerLink="/admin/client-list">
         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       </button>
 
       <div>
         <p class="eyebrow">Customer management</p>
-        <h2>Add new customer</h2>
+        <h2>{{clientId > 0 ? 'Edit customer' : 'Add new customer'}}</h2>
         <p class="page-description">
-          Create a customer profile with contact and tax information.
+          {{clientId > 0 ? 'Update the customer contact and tax information.' : 'Create a customer profile with contact and tax information.'}}
         </p>
       </div>
     </div>
 
     <span class="form-status">
       <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
-      New record
+      {{clientId > 0 ? 'Edit record' : 'New record'}}
     </span>
   </header>
 
@@ -100,7 +102,9 @@
           </div>
 
           <div class="field-group full-width">
-            <label for="customer-gst">GST number</label>
+            <label for="customer-gst">
+              GST number <span class="required" aria-hidden="true">*</span>
+            </label>
             <div class="input-control">
               <i class="fa-solid fa-receipt" aria-hidden="true"></i>
               <input
@@ -111,18 +115,19 @@
                 spellcheck="false"
               />
             </div>
-            <small>Enter the GST registration number, if applicable.</small>
+            <small>Enter the GST registration number.</small>
           </div>
         </div>
 
         <footer class="form-actions">
-          <button class="secondary-button" type="button">
+          <button class="secondary-button" type="button" routerLink="/admin/client-list">
             <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             Cancel
           </button>
+          <!-- Create a customer when clientId is 0; otherwise update the existing customer. -->
           <button class="primary-button" type="button" (click)="OnSaveClient()">
             <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
-            Save customer
+            {{clientId > 0 ? 'Update customer' : 'Save customer'}}
           </button>
         </footer>
       </form>
@@ -136,11 +141,11 @@
           </span>
           <div>
             <small>Customer ID</small>
-            <strong>Generated automatically</strong>
+            <strong>{{clientId > 0 ? clientId : 'Generated automatically'}}</strong>
           </div>
         </div>
         <p>
-          A unique customer ID will be assigned after the record is saved.
+          {{clientId > 0 ? 'This customer ID remains unchanged when the record is updated.' : 'A unique customer ID will be assigned after the record is saved.'}}
         </p>
       </section>
 

@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { EmployeeService } from '../../../core/services/employee-service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EmployeeModel } from '../../../core/models/classes/employee.model';
-import { API_Response } from '../../../core/models/interfaces/common.model';
+import { IEmployeeResponse } from '../../../core/models/interfaces/employee.model';
+import { IApiResponse } from '../../../core/models/interfaces/api-response.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { WarehouseModel } from '../../../core/models/classes/warehouse.model';
 import { WarehouseService } from '../../../core/services/warehouse-service';
@@ -37,15 +38,20 @@ export class NewEmployee {
     this.getAllWarehouse();
   }
 
+  // 
+
+
   getAllWarehouse(): void {
     this.warehouseService.getAll().subscribe({
-      next: (res: API_Response<WarehouseModel[]>) => {
+      next: (res: IApiResponse<WarehouseModel[]>) => {
         if (res.isSuccess) {
           this.warehouseList.set(res.data ?? []);
         }
       },
     });
   }
+  // warehouse A has emp1, emp2, emp3
+  // emp4 is working at the main office, so he does not work for any specific warehouse
 
   initilizeForm(): void {
     this.employeeForm = this.formBuilder.group({
@@ -64,7 +70,7 @@ export class NewEmployee {
         this.employeeId > 0
           ? [Validators.minLength(8), Validators.maxLength(100)]
           : [Validators.required, Validators.minLength(8), Validators.maxLength(100)],
-      ], // if employeeId = null which is false, no validation needed as we keep old password
+      ], // if employeeId = null which is false, no validation needed as we keep old password //e
     });
 
     if (this.employeeId > 0) {
@@ -76,24 +82,20 @@ export class NewEmployee {
 
   getEmployeeById() {
     this.employeeService.getById(this.employeeId).subscribe({
-      next: (res: API_Response) => {
-        if (res.isSuccess) {
+      next: (res: IApiResponse<IEmployeeResponse>) => {
+        if (res.isSuccess && res.data) {
           this.employeeForm.patchValue(res.data);
         } else {
           alert(res.errorMessages);
         }
       },
       error: (err: HttpErrorResponse) => {
-        alert(err.message);
+        alert(err.error.errorMessages);
       },
     });
   }
 
   OnSaveEmployee() {
-    if (this.employeeForm.invalid) {
-      this.employeeForm.markAllAsTouched();
-      return;
-    }
 
     const formValue: EmployeeModel = this.employeeForm.value;
 
@@ -106,33 +108,29 @@ export class NewEmployee {
 
   createEmployee(formValue: EmployeeModel) {
     this.employeeService.create(formValue).subscribe({
-      next: (res: API_Response) => {
+      next: (res: IApiResponse<IEmployeeResponse>) => {
         if (res.isSuccess) {
           alert(res.message);
           this.router.navigateByUrl('/admin/employees');
-        } else {
-          alert(res.errorMessages);
         }
       },
 
       error: (err: HttpErrorResponse) => {
-        alert(err.message);
+        alert(err.error.errorMessages);
       },
     });
   }
 
   updateEmployee(formValue: EmployeeModel) {
     this.employeeService.update(this.employeeId, formValue).subscribe({
-      next: (res: API_Response) => {
+      next: (res: IApiResponse<IEmployeeResponse>) => {
         if (res.isSuccess) {
           alert(res.message);
           this.router.navigateByUrl('/admin/employees');
-        } else {
-          alert(res.errorMessages);
-        }
+        } 
       },
       error: (err: HttpErrorResponse) => {
-        alert(err.message);
+        alert(err.error.errorMessages);
       },
     });
   }

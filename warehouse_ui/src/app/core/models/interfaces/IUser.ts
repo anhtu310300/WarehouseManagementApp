@@ -1,6 +1,6 @@
 export interface IUser {
-  empId: number
-  empName: string
-  userName: string
-  role: string
+  empId: number;
+  empName: string;
+  userName: string;
+  role: string;
 }

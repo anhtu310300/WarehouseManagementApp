@@ -1,7 +1,7 @@
 <section class="employee-form-page">
   <header class="page-header">
     <div class="header-copy">
-      <button class="back-button" type="button" aria-label="Back to employee list" routerLink="/admin/employees">
+      <button class="back-button" type="button" aria-label="Back to employee list">
         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
       </button>
 
@@ -87,7 +87,7 @@
             <div class="input-control select-control">
               <i class="fa-regular fa-circle-check" aria-hidden="true"></i>
 
-              <select id="employee-status" name="isActive" formControlName="isActive"> <!--This part works due to addControl -->
+              <select id="employee-status" name="isActive" formControlName="isActive">
                 <option [ngValue]="true">Active</option>
                 <option [ngValue]="false">Inactive</option>
               </select>
@@ -106,7 +106,7 @@
             <div class="input-control">
               <i class="fa-solid fa-phone" aria-hidden="true"></i>
               <input id="employee-mobile" formControlName="mobileNo" name="mobileNo" type="tel"
-                maxlength="10" inputmode="numeric" placeholder="e.g. 0912345678" autocomplete="tel" />
+                placeholder="e.g. 0912345678" autocomplete="tel" />
             </div>
           </div>
 
@@ -135,7 +135,7 @@
         </div>
 
         <footer class="form-actions">
-          <button class="secondary-button" type="button" routerLink="/admin/employees">
+          <button class="secondary-button" type="button">
             <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             Cancel
           </button>
@@ -158,8 +158,8 @@
             <strong>{{employeeId > 0 ? employeeId : 'Generated automatically'}}</strong>
           </div>
         </div>
-        <p>{{employeeId > 0 ? 'This employee ID remains unchanged when the record is updated.' : 'A unique employee ID
-          will be assigned after the record is saved.'}}</p>
+        <p>{{employeeId > 0 ? 'This employee ID remains unchanged when the record is updated.' : 
+        'A unique employee ID will be assigned after the record is saved.'}} </p>
       </section>
 
       <section class="info-card">

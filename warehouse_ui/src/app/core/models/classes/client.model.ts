@@ -1,17 +1,10 @@
-export class ClientModel {
-  customerId: number;
-  custName: string;
-  address: string;
-  mobile: string;
-  email: string;
-  gstNo: string;
+import { ICreateCustomerRequest } from '../interfaces/customer.model';
 
-  constructor() {
-    this.customerId = 0;
-    this.custName = '';
-    this.address = '';
-    this.mobile = '';
-    this.email = '';
-    this.gstNo = '';
-  }
+export class ClientModel implements ICreateCustomerRequest {
+  customerId = 0;
+  custName = '';
+  address = '';
+  mobile = '';
+  email = '';
+  gstNo = '';
 }

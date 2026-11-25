@@ -1,0 +1,176 @@
+<dialog #spaceDialog class="spaces-modal" aria-labelledby="warehouse-spaces-title">
+  <header class="spaces-modal-header">
+    <div class="spaces-modal-heading">
+      <span class="spaces-modal-icon" aria-hidden="true">
+        <i class="fa-solid fa-boxes-stacked"></i>
+      </span>
+      <div>
+        <p class="panel-kicker">Warehouse spaces</p>
+        <h2 id="warehouse-spaces-title">{{ selectedWarehouse?.title }} spaces</h2>
+        <p>Manage the spaces assigned to this warehouse.</p>
+      </div>
+    </div>
+
+    <button
+      class="spaces-modal-close"
+      type="button"
+      aria-label="Close spaces modal"
+      title="Close"
+      (click)="spaceDialog.close()"
+    >
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+  </header>
+
+  <div class="spaces-modal-body">
+    <div class="spaces-overview" aria-label="Space summary">
+      <div>
+        <small>Selected warehouse</small>
+        <strong>{{ selectedWarehouse?.title }}</strong>
+      </div>
+      <span class="spaces-count-badge">{{ spaceList().length }} spaces</span>
+    </div>
+
+    <div class="spaces-table-scroll">
+      <table class="spaces-table">
+        <thead>
+          <tr>
+            <th>Space</th>
+            <th>Area</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th class="action-heading">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (space of spaceList(); track space.spaceId) {
+            <tr [class.inactive-row]="!space.isActive">
+              <td>
+                <div class="space-name-cell">
+                  <span class="space-mark" aria-hidden="true">
+                    <i class="fa-solid fa-box-open"></i>
+                  </span>
+                  <div>
+                    <strong>{{ space.spaceName }}</strong>
+                    <small>Space #{{ space.spaceId }}</small>
+                  </div>
+                </div>
+              </td>
+
+              <td>{{ space.areaSqft }} sq. ft.</td>
+              <td class="space-description-cell">
+                {{ space.description || '—' }}
+              </td>
+
+              <td>
+                <span
+                  class="space-status"
+                  [class.active]="space.isActive"
+                  [class.inactive]="!space.isActive"
+                >
+                  {{ space.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+
+              <td>
+                <div class="row-actions">
+                  <button
+                    type="button"
+                    [attr.aria-label]="'Edit ' + space.spaceName"
+                    title="Edit space"
+                    (click)="onEditSpace(space.spaceId)"
+                  >
+                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+                  </button>
+
+                  @if (space.isActive) {
+                    <button
+                      class="danger-action"
+                      type="button"
+                      [attr.aria-label]="'Deactivate ' + space.spaceName"
+                      title="Deactivate space"
+                      (click)="onDeleteSpace(space.spaceId)"
+                    >
+                      <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                    </button>
+                  } @else {
+                    <button
+                      class="activate-action"
+                      type="button"
+                      [attr.aria-label]="'Activate ' + space.spaceName"
+                      title="Activate space"
+                      (click)="onActivateSpace(space.spaceId)"
+                    >
+                      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="space-message">
+                No spaces found for this warehouse. Add one below.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <section class="space-editor" aria-labelledby="space-editor-title">
+      <div class="space-editor-heading">
+        <div>
+          <p class="panel-kicker">Space details</p>
+          <h3 id="space-editor-title">
+            {{ selectedSpaceId > 0 ? 'Edit space' : 'Add a space' }}
+          </h3>
+        </div>
+
+        @if (selectedSpaceId > 0) {
+          <button class="text-button" type="button" (click)="onClearForm()">
+            Cancel edit
+          </button>
+        }
+      </div>
+
+      <form class="space-form" [formGroup]="spaceForm" (ngSubmit)="OnSaveSpace()">
+        <label>
+          Space name
+          <input type="text" formControlName="spaceName" />
+        </label>
+
+        <label>
+          Area (sq. ft.)
+          <input type="number" formControlName="areaSqft" min="1" step="1" />
+        </label>
+
+        <label class="space-description">
+          Description
+          <textarea formControlName="description" rows="2"></textarea>
+        </label>
+
+        @if (selectedSpaceId > 0) {
+          <label class="space-active">
+            <input type="checkbox" formControlName="isActive" />
+            Active
+          </label>
+        }
+
+        <div class="space-editor-actions">
+          <button class="primary-button" type="submit">
+            {{ selectedSpaceId > 0 ? 'Save changes' : 'Add space' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <footer class="spaces-modal-footer">
+    <span>Spaces are managed separately for each warehouse.</span>
+    <button class="secondary-button" type="button" (click)="spaceDialog.close()">
+      Close
+    </button>
+  </footer>
+</dialog>

@@ -1,22 +1,12 @@
-export class EmployeeModel {
-  empId: number;
-  empName: string;
-  warehouseAssignedId: number | null;
-  mobileNo: string;
-  role: string;
-  userName: string;
-  isActive: boolean;
-  password?: string;
+import { IEmployeeResponse } from '../interfaces/employee.model';
 
-  constructor() {
-    this.empId = 0;
-    this.empName = '';
-    this.warehouseAssignedId = null;
-    this.mobileNo = '';
-    this.role = '';
-    this.userName = '';
-    this.isActive = true;
-    this.password = '';
-  }
+export class EmployeeModel implements IEmployeeResponse {
+  empId = 0;
+  empName = '';
+  warehouseAssignedId: number | null = null;
+  mobileNo = '';
+  role = '';
+  userName = '';
+  isActive = true;
+  password = '';
 }
-

@@ -1,20 +1,12 @@
-export class WarehouseModel {
-  warehouseId: number;
-  title: string;
-  address1: string;
-  address2: string;
-  city: string;
-  totalArea: number;
-  isColdStorageAvailable: boolean | null;
+import { IWarehouseResponse } from '../interfaces/warehouse.model';
 
-  constructor() {
-    this.warehouseId = 0;
-    this.title = '';
-    this.address1 = '';
-    this.address2 = '';
-    this.city = '';
-    this.totalArea = 0;
-    this.isColdStorageAvailable = false;
-  }
+export class WarehouseModel implements IWarehouseResponse {
+  warehouseId = 0;
+  title = '';
+  address1 = '';
+  address2 = '';
+  city = '';
+  totalArea = 0;
+  isColdStorageAvailable: boolean | null = false;
 }
 

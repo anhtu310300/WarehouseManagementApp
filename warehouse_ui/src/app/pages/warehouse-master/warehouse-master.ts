@@ -1,26 +1,22 @@
-import {
-  Component,
-  computed,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal, ViewChild, WritableSignal, } from '@angular/core';
 import { WarehouseModel } from '../../core/models/classes/warehouse.model';
 import { WarehouseService } from '../../core/services/warehouse-service';
 import { Subscription } from 'rxjs';
-import { API_Response } from '../../core/models/interfaces/common.model';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { SpaceModal } from './space-modal/space-modal';
+import { IApiResponse } from '../../core/models/interfaces/api-response.model';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, SpaceModal],
   selector: 'app-warehouse-master',
   styleUrl: './warehouse-master.css',
   templateUrl: './warehouse-master.html',
 })
 export class WarehouseMaster implements OnInit, OnDestroy {
+  @ViewChild('spaceModal') spaceModal?: SpaceModal;
+
   selectedWarehouseId: number = 0; // 0 -> add mode ; has warehouseId -> edit mode
   warehouseList: WritableSignal<WarehouseModel[]> = signal<WarehouseModel[]>([]);
   warehouseForm!: FormGroup;
@@ -37,28 +33,26 @@ export class WarehouseMaster implements OnInit, OnDestroy {
 
   getAllWarehouse() {
     this.subScription = this.warehouseService.getAll().subscribe({
-      next: (res: API_Response) => {
-        if (res.isSuccess) {
+      next: (res) => {
+        if (res.isSuccess && res.data) {
           this.warehouseList.set(res.data);
         }
       },
       error: (err: HttpErrorResponse) => {
-        console.error(err);
+        alert(err.error.errorMessages);
       },
     });
   }
 
   getWarehouseById() {
     this.warehouseService.getById(this.selectedWarehouseId).subscribe({
-      next: (res: API_Response) => {
-        if (res.isSuccess) {
+      next: (res) => {
+        if (res.isSuccess && res.data) {
           this.warehouseForm.patchValue(res.data);
-        } else {
-          alert(res.errorMessages);
         }
       },
       error: (err: HttpErrorResponse) => {
-        alert(err.message);
+        alert(err.error.errorMessages);
       },
     });
   }
@@ -80,10 +74,7 @@ export class WarehouseMaster implements OnInit, OnDestroy {
   }
 
   OnSaveWarehouse() {
-    if (this.warehouseForm.invalid) {
-      this.warehouseForm.markAllAsTouched();
-      return;
-    }
+
 
     const formValue: WarehouseModel = this.warehouseForm.value;
 
@@ -99,36 +90,37 @@ export class WarehouseMaster implements OnInit, OnDestroy {
     this.getWarehouseById();
   } // we need because we don't pass id through route
 
+openSpaceModal(warehouse: WarehouseModel): void {
+  this.spaceModal?.getAllSpace(warehouse);
+}
+
+
   createWarehouse(formValue: WarehouseModel) {
     this.warehouseService.create(formValue).subscribe({
-      next: (res: API_Response) => {
+      next: (res: IApiResponse) => {
         if (res.isSuccess) {
           alert(res.message);
           this.getAllWarehouse();
           this.onClearForm();
-        } else {
-          alert(res.errorMessages);
         }
       },
       error: (err: HttpErrorResponse) => {
-        alert(err.message);
+        alert(err.error.errorMessages);
       },
     });
   }
 
   updateWarehouse(formValue: WarehouseModel) {
     this.warehouseService.update(this.selectedWarehouseId, formValue).subscribe({
-      next: (res: API_Response) => {
+      next: (res: IApiResponse) => {
         if (res.isSuccess) {
           alert(res.message);
           this.getAllWarehouse();
           this.onClearForm();
-        } else {
-          alert(res.errorMessages);
         }
       },
       error: (err: HttpErrorResponse) => {
-        alert(err.message);
+        alert(err.error.errorMessages);
       },
     });
   }
@@ -141,16 +133,14 @@ export class WarehouseMaster implements OnInit, OnDestroy {
     }
 
     this.subScription = this.warehouseService.delete(id).subscribe({
-      next: (res: API_Response) => {
+      next: (res: IApiResponse) => {
         if (res.isSuccess) {
           alert(res.message);
           this.getAllWarehouse();
-        } else {
-          alert(res.errorMessages);
         }
       },
       error: (err: HttpErrorResponse) => {
-        alert(err.message);
+        alert(err.error.errorMessages);
       },
     });
   }
@@ -185,6 +175,9 @@ export class WarehouseMaster implements OnInit, OnDestroy {
           .filter((city) => city.length > 0),
       ).size,
   );
+
+
+
 
   ngOnDestroy(): void {
     if (this.subScription) {

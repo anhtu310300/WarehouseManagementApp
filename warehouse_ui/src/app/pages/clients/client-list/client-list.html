@@ -21,7 +21,9 @@
     </label>
 
     <div class="toolbar-actions">
-      <button class="icon-button" type="button" aria-label="Refresh customer list">
+      <!-- Reload the customer list from the API. -->
+      <button class="icon-button" type="button" aria-label="Refresh customer list"
+      (click)="getAllClient()">
         <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
       </button>
 
@@ -45,8 +47,8 @@
   </section>
 
   <div class="result-summary">
-    <p><strong>1</strong> customer found</p>
-    <span><i class="fa-solid fa-grip" aria-hidden="true"></i> Card view</span>
+    <p><strong>{{clientList().length}}</strong> customer found</p> <!-- Signal-->
+    <span><i class="fa-solid fa-grip" aria-hidden="true"></i> {{isCardView ? 'Card' : 'Table'}} view</span>
   </div>
 @if (isCardView) {
   <section class="view-panel card-view is-active" aria-label="Customer card view">
@@ -64,6 +66,7 @@
             </p>
           </div>
   
+          <!-- Open additional actions for this customer. -->
           <button class="more-button" type="button" aria-label="More customer actions">
             <i class="fa-solid fa-ellipsis-vertical" aria-hidden="true"></i>
           </button>
@@ -100,11 +103,13 @@
             <i class="fa-regular fa-eye" aria-hidden="true"></i>
             View
           </button>
-          <button class="text-button" type="button">
+          <button class="text-button" type="button"
+          [routerLink]="['/admin/client-form', item.customerId]">
             <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
             Edit
           </button>
-          <button class="text-button danger" type="button">
+          <button class="text-button danger" type="button"
+          (click)="onDeleteClient(item.customerId)">
             <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
             Delete
           </button>
@@ -149,13 +154,20 @@
               <td><span class="gst-badge">{{item.gstNo}}</span></td>
               <td>
                 <div class="row-actions">
+                  <!-- View this customer's details. -->
                   <button type="button" aria-label="View Rajesh Kumar">
                     <i class="fa-regular fa-eye" aria-hidden="true"></i>
                   </button>
-                  <button type="button" [attr.aria-label]="'Edit ' + item.custName">
+                  <!-- Navigate to the form and edit this customer. -->
+                  <button type="button"
+                  [attr.aria-label]="'Edit ' + item.custName"
+                  [routerLink]="['/admin/client-form', item.customerId]">
                     <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
                   </button>
-                  <button class="delete-action" type="button" aria-label="Delete Rajesh Kumar">
+                  <!-- Delete this customer and reload the customer list. -->
+                  <button class="delete-action" type="button"
+                  [attr.aria-label]="'Delete ' + item.custName"
+                  (click)="onDeleteClient(item.customerId)">
                     <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -167,12 +179,14 @@
       </table>
   
       <footer class="table-footer">
-        <span>Showing 1 of 1 customer</span>
+        <span>Showing {{clientList().length}} customer</span>
         <div class="pagination">
+          <!-- Go to the previous page. -->
           <button type="button" disabled aria-label="Previous page">
             <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
           </button>
           <button class="current-page" type="button" aria-current="page">1</button>
+          <!-- Go to the next page. -->
           <button type="button" disabled aria-label="Next page">
             <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
           </button>

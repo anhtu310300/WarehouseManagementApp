@@ -1,8 +1,8 @@
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { ClientService } from '../../../core/services/client-service';
-import { API_Response } from '../../../core/models/interfaces/common.model';
+import { IApiResponse } from '../../../core/models/interfaces/api-response.model';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ClientModel } from '../../../core/models/classes/client.model';
+import { ICustomerResponse } from '../../../core/models/interfaces/customer.model';
 import { Subscription } from 'rxjs';
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -15,7 +15,7 @@ import { RouterLink } from '@angular/router';
 })
 export class ClientList implements OnInit, OnDestroy{
 
-  clientList: WritableSignal<ClientModel[]> = signal<ClientModel[]>([]); 
+  clientList: WritableSignal<ICustomerResponse[]> = signal<ICustomerResponse[]>([]); 
   clientService = inject (ClientService);
 
   subScription!: Subscription;
@@ -26,19 +26,41 @@ export class ClientList implements OnInit, OnDestroy{
   }
 
   getAllClient(){
-    this.subScription = this.clientService.getAllClient().subscribe({
-      next: (res:API_Response) =>{
+    this.subScription = this.clientService.getAll().subscribe({
+      next: (res:IApiResponse<ICustomerResponse[]>) =>{
          if (res.isSuccess) {
-        this.clientList.set(res.data);
+        this.clientList.set(res.data ?? []);
       }
       },
       error: (err:HttpErrorResponse) =>{
-        console.error(err);
+        alert(err.error.errorMessages);
       }
     })
   }
 
+  onDeleteClient(id: number) {
+    const isDelete = confirm('Are you sure you want to delete this customer?');
+
+    if (!isDelete) {
+      return;
+    }
+
+    this.subScription = this.clientService.delete(id).subscribe({
+      next: (res: IApiResponse<null>) => {
+        if (res.isSuccess) {
+          alert(res.message);
+          this.getAllClient();
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        alert(err.error.errorMessages);
+      }
+    });
+  }
+
   ngOnDestroy(): void{
-    this.subScription.unsubscribe();
+    if (this.subScription) {
+      this.subScription.unsubscribe();
+    }
   }
 }

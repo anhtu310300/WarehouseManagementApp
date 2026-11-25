@@ -1,0 +1,151 @@
+<section class="booking-page">
+    <header class="page-header">
+        <div>
+            <p class="eyebrow">Booking management</p>
+            <h2>Bookings</h2>
+            <p class="page-description">
+                Manage customer bookings, warehouse spaces and rental periods.
+            </p>
+        </div>
+
+        <button class="primary-button" type="button" routerLink="/admin/booking-form/0">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <span>Add booking</span>
+        </button>
+    </header>
+
+    <section class="booking-panel" aria-label="Booking list">
+        <header class="panel-header">
+            <div>
+                <h3>Booking records</h3>
+                <p>All warehouse bookings</p>
+            </div>
+
+            <span class="result-count">
+                <strong>{{ bookingList().length }}</strong> bookings
+            </span>
+        </header>
+
+        <div class="table-scroll">
+            <table class="booking-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Booking</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Warehouse</th>
+                        <th scope="col">Space</th>
+                        <th scope="col">Rental period</th>
+                        <th scope="col" class="number-column">Area</th>
+                        <th scope="col" class="number-column">Total amount</th>
+                        <th scope="col">Booked by</th>
+                        <th scope="col" class="action-heading">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (item of bookingList(); track item.bookingId) {
+                    <tr>
+                        <td>
+                            <div class="booking-identity">
+                                <span class="booking-icon">
+                                    <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+                                </span>
+
+                                <div>
+                                    <strong>#{{ item.bookingId }}</strong>
+                                    <small>
+                                        Created {{ item.bookingDate | date: 'dd/MM/yyyy' }}
+                                    </small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="reference-value">
+                                #{{ item.customerId }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="reference-value">
+                                #{{ item.warehouseId }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="reference-value">
+                                {{ item.spaceId === null ? '—' : '#' + item.spaceId }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="date-range">
+                                <strong>
+                                    {{ item.bookingFromDate | date: 'dd/MM/yyyy' }}
+                                </strong>
+                                <small>
+                                    to {{ item.bookingTillDate | date: 'dd/MM/yyyy' }}
+                                </small>
+                            </div>
+                        </td>
+
+                        <td class="number-column">
+                            <strong class="area-value">
+                                {{ item.sqftAreaNeeded | number: '1.0-0' }}
+                            </strong>
+                            <small class="area-unit">sq. ft.</small>
+                        </td>
+
+                        <td class="number-column">
+                            <strong class="amount-value">
+                                {{ item.totalAmount | number: '1.2-2' }}
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="reference-value">
+                                #{{ item.bookingDoneBy }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="row-actions">
+                                <button class="secondary-action" type="button" (click)="openPaymentModal(item)"
+                                    title="Payments" [attr.aria-label]="'Payments for booking ' + item.bookingId">
+                                    <i class="fa-regular fa-credit-card" aria-hidden="true"></i>
+                                    Payment
+                                </button>
+                                <button class="secondary-action" type="button"
+                                    [routerLink]="['/admin/booking-form', item.bookingId]"
+                                    [attr.aria-label]="'Edit booking ' + item.bookingId">
+                                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i>
+                                    Edit
+                                </button>
+
+                                <button class="danger-action" type="button" (click)="onDeleteBooking(item.bookingId)"
+                                    [attr.aria-label]="'Delete booking ' + item.bookingId">
+                                    <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="9" class="empty-state">
+                            <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                            <strong>No bookings to display</strong>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="table-footer">
+            Showing {{ bookingList().length }} bookings
+        </footer>
+    </section>
+</section>
+
+<app-payment-modal #paymentModal />
