@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
@@ -21,6 +21,8 @@ import { IEmployeeResponse } from '../../../core/models/interfaces/employee.mode
 import { IApiResponse } from '../../../core/models/interfaces/api-response.model';
 import { ISpaceAvailabilityResponse } from '../../../core/models/interfaces/space.model';
 
+import { CommonService } from '../../../core/services/common-service';
+
 @Component({
   imports: [ReactiveFormsModule, RouterLink, AsyncPipe],
   selector: 'app-booking-form',
@@ -28,13 +30,15 @@ import { ISpaceAvailabilityResponse } from '../../../core/models/interfaces/spac
   templateUrl: './booking-form.html',
 })
 export class BookingForm {
+  commonService = inject(CommonService);
+  isShowLoader = signal<boolean>(false);
+
   bookingId: number = 0;
   bookingForm!: FormGroup;
 
   customerList$!: Observable<IApiResponse<ICustomerResponse[]>>;
   warehouseList$!: Observable<IApiResponse<WarehouseModel[]>>;
-  spaceList$: Observable<ISpaceAvailabilityResponse[]> =
-    of<ISpaceAvailabilityResponse[]>([]);
+  spaceList$: Observable<ISpaceAvailabilityResponse[]> = of<ISpaceAvailabilityResponse[]>([]);
   employeeList$!: Observable<IApiResponse<IEmployeeResponse[]>>;
 
   clientService = inject(ClientService);
@@ -86,7 +90,7 @@ export class BookingForm {
       this.bookingForm.value.sqftAreaNeeded,
     );
 
-    // Availability cần kho, ngày thuê và diện tích để lọc space.
+    // Availability need warehouse, date, areaNeed to filter space
     if (!warehouseId || !fromDate || !tillDate || !areaNeeded) {
       this.spaceList$ = of<ISpaceAvailabilityResponse[]>([]);
       return;
@@ -182,28 +186,50 @@ export class BookingForm {
   }
 
   createBooking(formValue: BookingModel) {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.bookingService.create(formValue).subscribe({
       next: (res: IApiResponse<IBookingResponse>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.router.navigateByUrl('/admin/bookings');
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });
   }
 
   updateBooking(formValue: BookingModel) {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.bookingService.update(this.bookingId, formValue).subscribe({
       next: (res: IApiResponse<IBookingResponse>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.router.navigateByUrl('/admin/bookings');
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });

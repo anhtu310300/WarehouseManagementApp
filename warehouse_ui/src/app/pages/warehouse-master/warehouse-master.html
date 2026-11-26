@@ -279,7 +279,7 @@
             <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
             Clear
           </button>
-          <button class="primary-button form-submit" type="button" type="submit">
+          <button class="primary-button form-submit" type="submit" [disabled]="isShowLoader()">
             <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
             {{ selectedWarehouseId > 0 ? 'Update warehouse' : 'Save warehouse' }}
           </button>

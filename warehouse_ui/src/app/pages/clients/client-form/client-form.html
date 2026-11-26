@@ -125,7 +125,7 @@
             Cancel
           </button>
           <!-- Create a customer when clientId is 0; otherwise update the existing customer. -->
-          <button class="primary-button" type="button" (click)="OnSaveClient()">
+          <button class="primary-button" type="button" (click)="OnSaveClient()" [disabled]="isShowLoader()">
             <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
             {{clientId > 0 ? 'Update customer' : 'Save customer'}}
           </button>

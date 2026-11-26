@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GLOBAL_CONSTANT } from '../../../core/constant/global.constant';
 import { IUser } from '../../../core/models/interfaces/IUser';
@@ -9,6 +9,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ClientModel } from '../../../core/models/classes/client.model';
 import { ICustomerResponse } from '../../../core/models/interfaces/customer.model';
 
+import { CommonService } from '../../../core/services/common-service';
+
 @Component({
   imports: [ReactiveFormsModule,RouterLink],
   selector: 'app-client-form',
@@ -16,6 +18,9 @@ import { ICustomerResponse } from '../../../core/models/interfaces/customer.mode
   templateUrl: './client-form.html',
 })
 export class ClientForm {
+  commonService = inject(CommonService);
+  isShowLoader = signal<boolean>(false);
+
   loggedUser!: IUser;
   clientForm!: FormGroup;
   clientId: number = 0; // UI divides into 2 create/ update mode depends on this value
@@ -83,28 +88,50 @@ export class ClientForm {
   }
 
   createClient(formValue: ClientModel) {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.clientService.create(formValue).subscribe({
       next: (res: IApiResponse<ICustomerResponse>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.router.navigateByUrl('/admin/client-list');
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });
   }
 
   updateClient(formValue: ClientModel) {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.clientService.update(this.clientId, formValue).subscribe({
       next: (res: IApiResponse<ICustomerResponse>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.router.navigateByUrl('/admin/client-list');
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });

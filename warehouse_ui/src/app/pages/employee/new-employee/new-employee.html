@@ -139,7 +139,7 @@
             <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             Cancel
           </button>
-          <button class="primary-button" type="submit" (click)="OnSaveEmployee()">
+          <button class="primary-button" type="submit" (click)="OnSaveEmployee()" [disabled]="isShowLoader()">
             <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
             {{employeeId > 0 ? 'Update Employee' : 'Save Employee'}}
           </button>

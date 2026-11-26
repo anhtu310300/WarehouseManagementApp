@@ -8,6 +8,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { SpaceModal } from './space-modal/space-modal';
 import { IApiResponse } from '../../core/models/interfaces/api-response.model';
 
+import { CommonService } from '../../core/services/common-service';
+
 @Component({
   imports: [ReactiveFormsModule, SpaceModal],
   selector: 'app-warehouse-master',
@@ -15,6 +17,9 @@ import { IApiResponse } from '../../core/models/interfaces/api-response.model';
   templateUrl: './warehouse-master.html',
 })
 export class WarehouseMaster implements OnInit, OnDestroy {
+  commonService = inject(CommonService);
+  isShowLoader = signal<boolean>(false);
+
   @ViewChild('spaceModal') spaceModal?: SpaceModal;
 
   selectedWarehouseId: number = 0; // 0 -> add mode ; has warehouseId -> edit mode
@@ -96,8 +101,16 @@ openSpaceModal(warehouse: WarehouseModel): void {
 
 
   createWarehouse(formValue: WarehouseModel) {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.warehouseService.create(formValue).subscribe({
       next: (res: IApiResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.getAllWarehouse();
@@ -105,14 +118,25 @@ openSpaceModal(warehouse: WarehouseModel): void {
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });
   }
 
   updateWarehouse(formValue: WarehouseModel) {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.warehouseService.update(this.selectedWarehouseId, formValue).subscribe({
       next: (res: IApiResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.getAllWarehouse();
@@ -120,6 +144,9 @@ openSpaceModal(warehouse: WarehouseModel): void {
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });

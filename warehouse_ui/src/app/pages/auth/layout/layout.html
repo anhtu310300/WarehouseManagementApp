@@ -13,11 +13,11 @@
     <nav class="sidebar-nav" aria-label="Workspace navigation">
       <span class="nav-section-label">Workspace</span>
 
-      <a class="nav-item active" href="#" aria-current="page" title="Overview">
+      <a class="nav-item" href="#" title="Overview">
         <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
         <span class="nav-label">Overview</span>
       </a>
-      <a class="nav-item" href="#" title="Warehouses" routerLink="/admin/warehouse-list">
+      <a class="nav-item" routerLink="/admin/warehouse-list" routerLinkActive="active" title="Warehouses">
         <i class="fa-solid fa-warehouse" aria-hidden="true"></i>
         <span class="nav-label">Warehouses</span>
       </a>
@@ -25,11 +25,11 @@
         <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
         <span class="nav-label">Spaces</span>
       </a>
-      <a class="nav-item" href="#" title="Customers" routerLink="/admin/client-list">
+      <a class="nav-item" routerLink="/admin/client-list" routerLinkActive="active" title="Customers">
         <i class="fa-solid fa-users" aria-hidden="true"></i>
         <span class="nav-label">Customers</span>
       </a>
-      <a class="nav-item" href="#" title="Bookings" routerLink="/admin/bookings">
+      <a class="nav-item" routerLink="/admin/bookings" routerLinkActive="active" title="Bookings">
         <i class="fa-solid fa-calendar-check" aria-hidden="true" ></i>
         <span class="nav-label">Bookings</span>
       </a>
@@ -37,7 +37,7 @@
         <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
         <span class="nav-label">Payments</span>
       </a>
-      <a class="nav-item" href="#" title="Employees" routerLink="/admin/employees">
+      <a class="nav-item" routerLink="/admin/employees" routerLinkActive="active" title="Employees">
         <i class="fa-solid fa-user-group" aria-hidden="true"></i>
         <span class="nav-label">Employees</span>
       </a>
@@ -99,3 +99,9 @@
     </main>
   </section>
 </div>
+
+@if (isShowLoader()) {
+  <div class="loading-overlay" role="status" aria-label="Đang xử lý">
+    <img src="/loaderGif.gif" alt="" />
+  </div>
+}

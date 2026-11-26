@@ -9,6 +9,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { WarehouseModel } from '../../../core/models/classes/warehouse.model';
 import { WarehouseService } from '../../../core/services/warehouse-service';
 
+import { CommonService } from '../../../core/services/common-service';
+
 @Component({
   imports: [ReactiveFormsModule, RouterLink],
   selector: 'app-new-employee',
@@ -16,6 +18,9 @@ import { WarehouseService } from '../../../core/services/warehouse-service';
   templateUrl: './new-employee.html',
 })
 export class NewEmployee {
+  commonService = inject(CommonService);
+  isShowLoader = signal<boolean>(false);
+
   employeeId: number = 0;
   employeeForm!: FormGroup;
 
@@ -107,8 +112,16 @@ export class NewEmployee {
   }
 
   createEmployee(formValue: EmployeeModel) {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.employeeService.create(formValue).subscribe({
       next: (res: IApiResponse<IEmployeeResponse>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.router.navigateByUrl('/admin/employees');
@@ -116,20 +129,34 @@ export class NewEmployee {
       },
 
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });
   }
 
   updateEmployee(formValue: EmployeeModel) {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.employeeService.update(this.employeeId, formValue).subscribe({
       next: (res: IApiResponse<IEmployeeResponse>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.router.navigateByUrl('/admin/employees');
         } 
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });

@@ -214,7 +214,7 @@
                         Cancel
                     </button>
 
-                    <button class="primary-button" type="submit" (click)="OnSaveBooking()">
+                    <button class="primary-button" type="submit" (click)="OnSaveBooking()" [disabled]="isShowLoader()">
                         <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>
                         {{ bookingId > 0 ? 'Update Booking' : 'Save Booking' }}
                     </button>

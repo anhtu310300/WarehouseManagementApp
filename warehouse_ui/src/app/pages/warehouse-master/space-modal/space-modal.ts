@@ -7,6 +7,8 @@ import { WarehouseModel } from '../../../core/models/classes/warehouse.model';
 import { IApiResponse } from '../../../core/models/interfaces/api-response.model';
 import { SpaceService } from '../../../core/services/space-service';
 
+import { CommonService } from '../../../core/services/common-service';
+
 @Component({
   imports: [ReactiveFormsModule],
   selector: 'app-space-modal',
@@ -14,6 +16,9 @@ import { SpaceService } from '../../../core/services/space-service';
   templateUrl: './space-modal.html',
 })
 export class SpaceModal {
+  commonService = inject(CommonService);
+  isShowLoader = signal<boolean>(false);
+
   @ViewChild('spaceDialog') spaceDialog?: ElementRef<HTMLDialogElement>;
 
   selectedWarehouse: WarehouseModel | null = null;
@@ -82,7 +87,6 @@ export class SpaceModal {
   }
 
   OnSaveSpace(): void {
-
     const formValue: SpaceModel = this.spaceForm.value;
     formValue.warehouseId = this.selectedWarehouse!.warehouseId;
 
@@ -99,8 +103,16 @@ export class SpaceModal {
   }
 
   createSpace(formValue: SpaceModel): void {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.spaceService.create(formValue).subscribe({
       next: (res: IApiResponse<SpaceModel>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.onClearForm();
@@ -108,14 +120,25 @@ export class SpaceModal {
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });
   }
 
   updateSpace(formValue: SpaceModel, id = this.selectedSpaceId): void {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.spaceService.update(id, formValue).subscribe({
       next: (res: IApiResponse<SpaceModel>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
 
@@ -127,6 +150,9 @@ export class SpaceModal {
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });
@@ -134,12 +160,12 @@ export class SpaceModal {
 
   // switch inactive space -> active
   onActivateSpace(id: number): void {
-  const space = this.spaceList().find(item => item.spaceId === id);
-  if (!space) return;
+    const space = this.spaceList().find((item) => item.spaceId === id);
+    if (!space) return;
 
-  const formValue: SpaceModel = { ...space, isActive: true };
-  this.updateSpace(formValue, id);
-}
+    const formValue: SpaceModel = { ...space, isActive: true };
+    this.updateSpace(formValue, id);
+  }
 
   onDeleteSpace(id: number): void {
     const isDelete = confirm('Are you sure you want to deactivate this space?');

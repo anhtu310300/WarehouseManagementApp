@@ -12,6 +12,8 @@ import { IApiResponse } from '../../../core/models/interfaces/api-response.model
 import { PaymentService } from '../../../core/services/payment-service';
 import { EmployeeService } from '../../../core/services/employee-service';
 
+import { CommonService } from '../../../core/services/common-service';
+
 @Component({
   imports: [ReactiveFormsModule, AsyncPipe, DatePipe, DecimalPipe],
   selector: 'app-payment-modal',
@@ -19,6 +21,9 @@ import { EmployeeService } from '../../../core/services/employee-service';
   templateUrl: './payment-modal.html',
 })
 export class PaymentModal {
+  commonService = inject(CommonService);
+  isShowLoader = signal<boolean>(false);
+
   @ViewChild('paymentDialog') paymentDialog?: ElementRef<HTMLDialogElement>;
 
   selectedBooking: IBookingResponse | null = null;
@@ -113,8 +118,16 @@ export class PaymentModal {
   }
 
   createPayment(formValue: ICreatePaymentRequest): void {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.paymentService.create(formValue).subscribe({
       next: (res: IApiResponse<PaymentModel>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
           this.onClearForm();
@@ -122,14 +135,25 @@ export class PaymentModal {
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });
   }
 
   updatePayment(formValue: ICreatePaymentRequest, id = this.selectedPaymentId): void {
+    if (this.isShowLoader()) return;
+
+    this.isShowLoader.set(true);
+    this.commonService.isShowLoader$.next(true);
+
     this.paymentService.update(id, formValue).subscribe({
       next: (res: IApiResponse<PaymentModel>) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         if (res.isSuccess) {
           alert(res.message);
 
@@ -141,6 +165,9 @@ export class PaymentModal {
         }
       },
       error: (err: HttpErrorResponse) => {
+        this.isShowLoader.set(false);
+        this.commonService.isShowLoader$.next(false);
+
         alert(err.error.errorMessages);
       },
     });

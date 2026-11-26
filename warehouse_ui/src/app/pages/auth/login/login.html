@@ -43,15 +43,8 @@
             <form>
               <div class="mb-3">
                 <label class="form-label" for="userName">Username</label>
-                <input
-                  class="form-control form-control-lg"
-                  id="userName"
-                  [(ngModel)]="loginObj.userName"
-                  name="userName"
-                  type="text"
-                  placeholder="Enter your username"
-                  autocomplete="username"
-                />
+                <input class="form-control form-control-lg" id="userName" [(ngModel)]="loginObj.userName"
+                  name="userName" type="text" placeholder="Enter your username" autocomplete="username" />
               </div>
 
               <div class="mb-3">
@@ -59,15 +52,8 @@
                   <label class="form-label mb-0" for="password">Password</label>
                   <a class="forgot-link" href="#">Forgot password?</a>
                 </div>
-                <input
-                  class="form-control form-control-lg"
-                  id="password"
-                  [(ngModel)]="loginObj.password"
-                  name="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  autocomplete="current-password"
-                />
+                <input class="form-control form-control-lg" id="password" [(ngModel)]="loginObj.password"
+                  name="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
               </div>
 
               <div class="form-check mb-4">
@@ -75,7 +61,10 @@
                 <label class="form-check-label" for="remember">Keep me signed in</label>
               </div>
 
-              <button class="btn btn-primary btn-lg w-100" type="submit" (click)="onLogin()">Sign in</button>
+              <button class="btn btn-primary btn-lg w-100" type="submit" (click)="onLogin()"
+                [disabled]="isShowLoader()">
+                Sign in
+              </button>
             </form>
 
             <p class="login-help text-center text-muted mb-0">
@@ -87,3 +76,10 @@
     </div>
   </div>
 </main>
+
+
+@if (isShowLoader()) {
+  <div class="loading-overlay" role="status" aria-label="Đang xử lý">
+    <img src="/loaderGif.gif" alt="" />
+  </div>
+}
