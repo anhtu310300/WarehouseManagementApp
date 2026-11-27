@@ -8,6 +8,7 @@ using warehouse_api.Repositories;
 using warehouse_api.Repositories.Interfaces;
 using warehouse_api.Services;
 using warehouse_api.Services.Interfaces;
+using warehouse_api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -115,6 +116,8 @@ builder.Services.AddAutoMapper(
     typeof(EmployeeProfile)); // auto, no need manual implement each profile
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 var swaggerEnabled =
     app.Environment.IsDevelopment()
